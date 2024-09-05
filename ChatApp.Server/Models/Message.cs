@@ -1,5 +1,7 @@
 ﻿namespace ChatApp.Server.Models
 {
+    //entity representing message
+    //each message is part of some conversation
     public class Message
     {
         public int Id { get; set; }

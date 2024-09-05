@@ -7,6 +7,7 @@ using System.Security.Claims;
 
 namespace ChatApp.Server.Services
 {
+    //implementation of iuserservice
     public class UserService : IUserService
     {
         private readonly AppDbContext _appDbContext;
@@ -18,6 +19,8 @@ namespace ChatApp.Server.Services
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
         }
+
+        //gets private key of currently logged in user, returns it to them on login
         public async Task<string?> GetEncriptedPrivateKeyOfUserWithMailAsync(string userMail)
         {
             if (userMail != _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Email))

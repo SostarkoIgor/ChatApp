@@ -2,6 +2,7 @@
 
 namespace ChatApp.Server.Dtos
 {
+    //dto  for register, type of data received from frontend on register request
     public class RegisterDto
     {
         [Required]

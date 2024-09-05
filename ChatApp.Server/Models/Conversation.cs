@@ -2,6 +2,8 @@
 
 namespace ChatApp.Server.Models
 {
+
+    //entity representing conversation/chatroom
     public class Conversation
     {
         public int Id { get; set; }

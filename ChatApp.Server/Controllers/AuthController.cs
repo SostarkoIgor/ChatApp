@@ -16,6 +16,9 @@ namespace ChatApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+    //this is controller for registering and login of user
+    //default identity implementations are not used considering we use jwt and need custom responses and request bodies
     public class AuthController : ControllerBase
     {
         private readonly UserManager<ChatUser> _userManager;
@@ -33,7 +36,7 @@ namespace ChatApp.Server.Controllers
             _userService = userService;
         }
 
-
+        //endpoint for registering new user
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
@@ -49,6 +52,9 @@ namespace ChatApp.Server.Controllers
                     UserName = registerDto.Username,
                     Email = registerDto.Email
                 };
+
+                //role asigned to every user that registers is "User"
+                //we create the role if it doesn't exist
                 var isUserCreated = await _userManager.CreateAsync(user, registerDto.Password);
                 if (isUserCreated.Succeeded)
                 {
@@ -64,6 +70,11 @@ namespace ChatApp.Server.Controllers
             }
             return BadRequest();
         }
+
+        //endpoint for user login
+        //we return jwt, user roles and encripted private key
+        //with that key, that user decrypts on frontend, user decodes all messages sent to it
+        //those messages are encrypted with users public key by the sender of message
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginDto model)
         {
@@ -72,16 +83,18 @@ namespace ChatApp.Server.Controllers
                 return BadRequest(ModelState);
             }
 
+            //if user does not exist we return apropriate response to client
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 return Unauthorized(new { Message = "Invalid credentials" });
             }
 
+            //we try to sign user in
             var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, isPersistent: false, lockoutOnFailure: false);
             if (result.Succeeded)
             {
-                // Generiranje JWT tokena
+                //if sign in is succesfull we generate and return token, alongside aforementioned key and roles
                 var token = GenerateJwtToken(user);
 
                 return Ok(new LoginResponseDto()
@@ -92,19 +105,22 @@ namespace ChatApp.Server.Controllers
                 });
             }
 
+            //if invalid password we return appropriate response to client
             return Unauthorized(new { Message = "Invalid credentials" });
         }
 
+        //function for generating token
         private string GenerateJwtToken(ChatUser user)
         {
             var claims = new[]
             {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Email, user.Email)
-        };
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
 
+            //we get key to sign token
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -116,6 +132,7 @@ namespace ChatApp.Server.Controllers
                 signingCredentials: creds
             );
 
+            //we return token
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 

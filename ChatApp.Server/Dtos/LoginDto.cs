@@ -2,6 +2,8 @@
 
 namespace ChatApp.Server.Dtos
 {
+
+    //this is sto used to log in, we receive this from frontend
     public class LoginDto
     {
         [Required]

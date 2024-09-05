@@ -11,6 +11,7 @@ namespace ChatApp.Server.Data
         {
             base.OnModelCreating(builder);
 
+            //here we set up block entity, it has info about who blocked who
             builder.Entity<Block>()
                 .HasOne(b => b.ChatUser)
                 .WithMany(u => u.BlockedUsers)
@@ -25,6 +26,7 @@ namespace ChatApp.Server.Data
 
         }
 
+        //dbsets for our entities
         public DbSet<ChatUser> ChatUsers { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
