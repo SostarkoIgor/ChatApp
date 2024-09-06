@@ -43,12 +43,14 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/api': {
+            '/api': {
                 target,
+                changeOrigin: true,
                 secure: false
             }
         },
         port: 5173,
+        host: true,
         https: {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),

@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react';
-import './App.css';
+import { useEffect, useState } from 'react'
+import './App.css'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 function App() {
 
@@ -9,6 +12,13 @@ function App() {
     
     return (<>
     
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Register></Register>} />
+                <Route path="/login" element={<Login></Login>} />
+                <Route path="/register" element={<Register></Register>} />
+            </Routes>
+        </BrowserRouter>
     </>)
     
     
