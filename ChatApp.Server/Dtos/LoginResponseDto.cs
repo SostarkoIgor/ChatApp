@@ -14,5 +14,10 @@ namespace ChatApp.Server.Dtos
 
         //roles of user
         public IList<string> Roles { get; set; }
+
+        //salt and iv used for encription of private asymmetric key
+        public string Salt { get; set; }
+
+        public string IV { get; set; }
     }
 }

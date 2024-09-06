@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ChatApp.Server.Models
 {
-    //chat user, 
+    //chat user
     public class ChatUser:IdentityUser
     {
         public string FirstName { get; set; } = string.Empty;
@@ -16,18 +16,18 @@ namespace ChatApp.Server.Models
         public string Description {  get; set; } = string.Empty;
 
         //others encode messages sent to user with this
-        [Required]
+        [Required(ErrorMessage = "No public key given.")]
         public string? PublicKey {  get; set; }
 
         //people decode messages sent to them with this
         //this is encripted key, they have to decode it on frontend with key derived from their password
-        [Required]
+        [Required(ErrorMessage = "No private key given.")]
         public string? EncriptedPrivateKey { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "No IV given.")]
         public string? IV { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "No salt given.")]
         public string? Salt { get; set; }
 
         //img url

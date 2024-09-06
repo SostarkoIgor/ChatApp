@@ -103,7 +103,9 @@ namespace ChatApp.Server.Controllers
                 {
                     Token = token,
                     PrivateEncriptedKey = await _userService.GetEncriptedPrivateKeyOfUserWithMailAsync(user.Email),
-                    Roles = await _userManager.GetRolesAsync(user)
+                    Roles = await _userManager.GetRolesAsync(user),
+                    Salt = user.Salt,
+                    IV = user.IV
                 });
             }
 
