@@ -30,6 +30,16 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:5173") // Dozvoljeni domen
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -50,6 +60,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors();
 
 app.MapFallbackToFile("/index.html");
 

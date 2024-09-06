@@ -47,10 +47,12 @@ namespace ChatApp.Server.Controllers
                     Description = registerDto.Description,
                     LastName = registerDto.LastName,
                     FirstName = registerDto.FirstName,
-                    EncriptedPrivateKey = registerDto.EncriptedPrivateKey,
+                    EncriptedPrivateKey = registerDto.EncryptedPrivateKey,
                     PublicKey = registerDto.PublicKey,
                     UserName = registerDto.Username,
-                    Email = registerDto.Email
+                    Email = registerDto.Email,
+                    IV = registerDto.IV,
+                    Salt = registerDto.Salt
                 };
 
                 //role asigned to every user that registers is "User"
@@ -68,7 +70,7 @@ namespace ChatApp.Server.Controllers
                 }
 
             }
-            return BadRequest();
+            return BadRequest("Invalid data.");
         }
 
         //endpoint for user login

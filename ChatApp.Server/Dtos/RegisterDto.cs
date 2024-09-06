@@ -23,7 +23,7 @@ namespace ChatApp.Server.Dtos
         public string Email { get; set; }
 
         [Required]
-        public string EncriptedPrivateKey { get; set; }
+        public string EncryptedPrivateKey { get; set; }
 
         [Required]
         public string PublicKey {  get; set; }
@@ -35,6 +35,11 @@ namespace ChatApp.Server.Dtos
         [MinLength(2)]
         [MaxLength(20)]
         public string Username { get; set; }
+
+        [Required]
+        public string IV { get; set; }
+        [Required]
+        public string Salt { get; set; }
 
 
     }

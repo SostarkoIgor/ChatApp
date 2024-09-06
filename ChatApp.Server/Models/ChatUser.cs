@@ -24,6 +24,12 @@ namespace ChatApp.Server.Models
         [Required]
         public string? EncriptedPrivateKey { get; set; }
 
+        [Required]
+        public string? IV { get; set; }
+
+        [Required]
+        public string? Salt { get; set; }
+
         //img url
         public string? Image { get; set; }
 
