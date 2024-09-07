@@ -11,10 +11,10 @@ export default function Register() {
 
     const submitForm = async (e) => {
         e.preventDefault()
-        console.log(username, password, firstName, lastName, description, email)
+        //console.log(username, password, firstName, lastName, description, email)
         let response = await register(username, password, firstName, lastName, description, email)
-        console.log(username, password, firstName, lastName, description, email)
-        console.log(response)
+        //console.log(username, password, firstName, lastName, description, email)
+        //console.log(response)
     }
     return (
         <div className={styles.container}>
