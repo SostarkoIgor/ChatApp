@@ -2,16 +2,53 @@ import axios from "axios"
 
 const source = "https://localhost:7109"
 
+//method to log in user
+export async function Login(Email, Password) {
+    try{
+        //we send login request
+        let response = await axios.post(source+'/api/Auth/login', {
+            Email: Email,
+            Password: Password
+        })
+
+        //we decrypt the private key
+        const privateKey = await decryptPrivateKey(response.data.privateEncriptedKey, Password, response.data.iv, response.data.salt)
+        //we return response
+        //response data contains private key, email, status and success (boolean)
+        return {
+            success: true,
+            status: response.status,
+            email: Email,
+            privateKey: privateKey
+        }
+    }
+    //we catch errors
+    catch (error) {
+        console.log(error)
+        return {
+            success: false,
+            error: error
+        }
+    }
+    
+}
+
 //method used to register a new user
 export async function Register(Username, Password, FirstName, LastName, Description, Email) {
     //we generate a public and private key pair
     //other users use this public key to encrypt messages sent to this user, and user uses this private key to decrypt messages received from others
     const { publicKeyBase64, privateKeyBase64 } = await getAndFormatKey()
 
+    console.log(privateKeyBase64)
+
     //we encrypt the private key using symetric encryption with key derived from the password
     //this way we can encrypt the private key with the password in the future
     //we do this because private keys should never be stored in plain text, only user to whom im belongs should be able to decrypt and use it
     const { iv, encryptedPrivateKeyBase64, salt } = await encryptPrivateKey(privateKeyBase64, Password);
+
+    console.log(encryptedPrivateKeyBase64)
+    
+    //console.log(encryptedPrivateKeyBase64, Password, iv, salt)
     let response
     try{
         //we call api enpoint for registration
@@ -24,13 +61,20 @@ export async function Register(Username, Password, FirstName, LastName, Descript
             Email: Email,
             PublicKey: publicKeyBase64,
             EncryptedPrivateKey: encryptedPrivateKeyBase64,
+            //we store iv and salt as string64
             IV: window.btoa(String.fromCharCode(... new Uint8Array(iv))),
             Salt: window.btoa(String.fromCharCode(... new Uint8Array(salt)))
             
         })
-        return response.status
+        return {
+            success: true,
+            status: response.status
+        }
     }catch(err){
-        console.log(err)
+        return {
+            success: false,
+            status: err.response.status
+        }
     }
 }
 
@@ -133,9 +177,72 @@ async function deriveKeyFromPassword(password, salt) {
         ['encrypt', 'decrypt']
     )
 
-    return derivedKey;
+    return derivedKey
 }
 
 function generateRandomSalt() {
     return window.crypto.getRandomValues(new Uint8Array(16)); //we generate random salt
+}
+
+//we convert base64 string to Uint8Array
+function base64ToUint8Array(base64) {
+    const binaryString = window.atob(base64);
+    
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    return bytes;
+}
+
+//decrypt private key
+export async function decryptPrivateKey(encryptedPrivateKeyBase64, password, ivBase64, saltBase64) {
+
+    //we decode iv and salt from base64 string to Uint8Array
+    const iv = base64ToUint8Array(ivBase64)
+    const salt = base64ToUint8Array(saltBase64)
+    
+    //we derive key from password and salt
+    const derivedKey = await deriveKeyFromPassword(password, salt);
+
+    //we decoce encryptedPrivateKeyBase64 to Uint8Array
+    const encryptedPrivateKey = base64ToUint8Array(encryptedPrivateKeyBase64)
+    
+    const decoder = new TextDecoder();
+
+    //we decode key, basically reverse of what we did wne encoding it when registering
+    const decryptedKeyBuffer = await window.crypto.subtle.decrypt(
+        {
+            name: 'AES-GCM',
+            iv: iv
+        },
+        derivedKey,
+        encryptedPrivateKey
+    )
+    
+    //we convert Uint8Array to base64 string
+    const decryptedKeyBase64 = decoder.decode(decryptedKeyBuffer)
+
+    //we import private key
+    return importPrivateKey(decryptedKeyBase64);
+}
+
+//function for importing private key
+async function importPrivateKey(privateKeyBase64) {
+    //we convert base64 string to Uint8Array
+    const keyBuffer = base64ToUint8Array(privateKeyBase64)
+    //we import private key
+    return window.crypto.subtle.importKey(
+        'pkcs8',
+        keyBuffer,
+        {
+            name: 'RSA-OAEP',
+            hash: 'SHA-256'
+        },
+        true,
+        ['decrypt']
+    )
 }

@@ -9,12 +9,18 @@ export default function Register() {
     const [description, setDescription] = useState('')
     const [email, setEmail] = useState('')
 
+    const [message, setMessage] = useState('')
+
     const submitForm = async (e) => {
         e.preventDefault()
-        //console.log(username, password, firstName, lastName, description, email)
         let response = await register(username, password, firstName, lastName, description, email)
-        //console.log(username, password, firstName, lastName, description, email)
-        //console.log(response)
+        if (response.success) {
+            //window.location.href = '/login'
+        }
+        else {
+            setMessage("Error registering.")
+        }
+        
     }
     return (
         <div className={styles.container}>
@@ -47,6 +53,7 @@ export default function Register() {
                 <div className={styles.group}>
                     <button type="submit" className={styles.button}>Register</button>
                 </div>
+                <p className={styles.message}>{message}</p>
             </form>
         </div>
     )
