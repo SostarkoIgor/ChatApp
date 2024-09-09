@@ -1,4 +1,5 @@
 import axios from "axios"
+import { getToken } from "./TokenService"
 
 const source = "https://localhost:7109"
 
@@ -11,15 +12,21 @@ export async function Login(Email, Password) {
             Password: Password
         })
 
+        console.log(response)
+        console.log("aaaaaaaaaaaaaaaaa")
+
         //we decrypt the private key
-        const privateKey = await decryptPrivateKey(response.data.privateEncriptedKey, Password, response.data.iv, response.data.salt)
+        const privateKey = await decryptPrivateKey(response.data.privateEncryptedKey, Password, response.data.iv, response.data.salt)
         //we return response
         //response data contains private key, email, status and success (boolean)
         return {
             success: true,
             status: response.status,
             email: Email,
-            privateKey: privateKey
+            privateKey: privateKey,
+            roles: response.data.roles,
+            token: response.data.token,
+            stringData: response.data
         }
     }
     //we catch errors
@@ -41,7 +48,7 @@ export async function Register(Username, Password, FirstName, LastName, Descript
 
     console.log(privateKeyBase64)
 
-    //we encrypt the private key using symetric encryption with key derived from the password
+    //we encrypt the private key using symmetric encryption with key derived from the password
     //this way we can encrypt the private key with the password in the future
     //we do this because private keys should never be stored in plain text, only user to whom im belongs should be able to decrypt and use it
     const { iv, encryptedPrivateKeyBase64, salt } = await encryptPrivateKey(privateKeyBase64, Password);
@@ -51,7 +58,7 @@ export async function Register(Username, Password, FirstName, LastName, Descript
     //console.log(encryptedPrivateKeyBase64, Password, iv, salt)
     let response
     try{
-        //we call api enpoint for registration
+        //we call api endpoint for registration
         response = await axios.post(source+'/api/Auth/register', {
             Username: Username,
             Password: Password,
@@ -92,7 +99,7 @@ function generateKeyPair() {
     )
 }
 
-//formating keys in base64 string
+//formatting keys in base64 string
 async function formatKey(keyPair) {
 
     //exports key in specific format for private/public key and then encodes it into base64 string
@@ -117,7 +124,7 @@ async function getAndFormatKey() {
     return { publicKeyBase64, privateKeyBase64 }
 }
 
-//as private key can not be stored in plain text, we encrypt it using symetric encryption with key derived from the password
+//as private key can not be stored in plain text, we encrypt it using symmetric encryption with key derived from the password
 async function encryptPrivateKey(privateKeyBase64NotEncrypted, password) {
     //we generate random salt and use it to derive key from password
     const salt= generateRandomSalt()
@@ -208,7 +215,7 @@ export async function decryptPrivateKey(encryptedPrivateKeyBase64, password, ivB
     //we derive key from password and salt
     const derivedKey = await deriveKeyFromPassword(password, salt);
 
-    //we decoce encryptedPrivateKeyBase64 to Uint8Array
+    //we decode encryptedPrivateKeyBase64 to Uint8Array
     const encryptedPrivateKey = base64ToUint8Array(encryptedPrivateKeyBase64)
     
     const decoder = new TextDecoder();
@@ -246,3 +253,4 @@ async function importPrivateKey(privateKeyBase64) {
         ['decrypt']
     )
 }
+

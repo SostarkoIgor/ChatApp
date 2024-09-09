@@ -1,6 +1,7 @@
 import styles from '../styles/auth.module.css'
 import { useState } from 'react'
-import { Register as register } from '../services/AuthSerivce'
+import { Register as register } from '../services/AuthService'
+import { Navigate } from 'react-router-dom'
 export default function Register() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -15,7 +16,7 @@ export default function Register() {
         e.preventDefault()
         let response = await register(username, password, firstName, lastName, description, email)
         if (response.success) {
-            //window.location.href = '/login'
+            window.location.href = '/login'
         }
         else {
             setMessage("Error registering.")

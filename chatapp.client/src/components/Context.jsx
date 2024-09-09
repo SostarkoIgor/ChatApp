@@ -1,13 +1,16 @@
 import { createContext, useState } from "react"
 
-export const PrivateKeyContext = createContext()
+export const AppContext = createContext()
 
 export const Context = ({ children }) => {
     const [privateKey, setPrivateKey] = useState(null)
+    const [roles, setRoles] = useState(null)
+    const [email, setEmail] = useState(null)
+    
 
     return (
-        <PrivateKeyContext.Provider value={{ privateKey, setPrivateKey }}>
+        <AppContext.Provider value={{ privateKey, setPrivateKey, roles, setRoles, email, setEmail }}>
             {children}
-        </PrivateKeyContext.Provider>
+        </AppContext.Provider>
     )
 }
