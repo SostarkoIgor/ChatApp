@@ -12,9 +12,6 @@ export async function Login(Email, Password) {
             Password: Password
         })
 
-        console.log(response)
-        console.log("aaaaaaaaaaaaaaaaa")
-
         //we decrypt the private key
         const privateKey = await decryptPrivateKey(response.data.privateEncryptedKey, Password, response.data.iv, response.data.salt)
         //we return response
@@ -31,7 +28,6 @@ export async function Login(Email, Password) {
     }
     //we catch errors
     catch (error) {
-        console.log(error)
         return {
             success: false,
             error: error
@@ -46,14 +42,12 @@ export async function Register(Username, Password, FirstName, LastName, Descript
     //other users use this public key to encrypt messages sent to this user, and user uses this private key to decrypt messages received from others
     const { publicKeyBase64, privateKeyBase64 } = await getAndFormatKey()
 
-    console.log(privateKeyBase64)
 
     //we encrypt the private key using symmetric encryption with key derived from the password
     //this way we can encrypt the private key with the password in the future
     //we do this because private keys should never be stored in plain text, only user to whom im belongs should be able to decrypt and use it
     const { iv, encryptedPrivateKeyBase64, salt } = await encryptPrivateKey(privateKeyBase64, Password);
 
-    console.log(encryptedPrivateKeyBase64)
     
     //console.log(encryptedPrivateKeyBase64, Password, iv, salt)
     let response

@@ -7,6 +7,7 @@ export const Context = ({ children }) => {
     const [roles, setRoles] = useState(null)
     const [email, setEmail] = useState(null)
     
+    
 
     return (
         <AppContext.Provider value={{ privateKey, setPrivateKey, roles, setRoles, email, setEmail }}>

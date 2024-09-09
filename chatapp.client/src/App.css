@@ -1,11 +1,28 @@
-﻿#root {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
+﻿body.dark{
+    --bg-color1: #101010;
+    --bg-color2: #2D2D2D;
+
+    --txt-color1: #fff;
+    --txt-color2: #cbcbcbd4;
+
+    --gradient: linear-gradient(180deg, #1c4f76 0%, #0a705d 100%);
 }
 
-th, td {
-    padding-left: 1rem;
-    padding-right: 1rem;
+body.light{
+    --bg-color1: #fff;
+    --bg-color2: #f5f5f5;
+
+    --txt-color1: #000;
+    --txt-color2: #131313ec;
+
+    --gradient: linear-gradient(180deg, #39A0ED 0%, #13C4A3 100%);
+}
+
+body{
+    --my-msg-bg-color: #39A0ED;
+    --their-msg-bg-color: #13C4A3;
+    --my-msg-text-color-fail: #4C6085;
+
+    --primary-color: #39A0ED;
+    --secondary-color: #13C4A3;
 }

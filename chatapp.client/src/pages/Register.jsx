@@ -26,35 +26,56 @@ export default function Register() {
     return (
         <div className={styles.container}>
             <form className={styles.form} onSubmit={submitForm}>
-                <h1>Register</h1>
-                <div className={styles.group}>
-                    <label htmlFor="username" className={styles.label}>Username</label>
-                    <input type="text" placeholder="Username" id="username" className={styles.input} onChange={(e) => setUsername(e.target.value)}/>
+                <p className={styles.title}>Register</p>
+                <div className={styles.bigGroup}>
+                    <div className={styles.group}>
+                        <div className={styles.labelWithIcon}>
+                            <span className="material-symbols-outlined">mood</span>
+                            <label htmlFor="username" className={styles.label}>Username</label>
+                        </div>
+                        <input type="text" placeholder="Username" id="username" className={styles.input} onChange={(e) => setUsername(e.target.value)}/>
+                    </div>
+                    <div className={styles.group}>
+                        <div className={styles.labelWithIcon}>
+                            <span className="material-symbols-outlined">key</span>
+                            <label htmlFor="password" className={styles.label}>Password</label>
+                        </div>
+                        <input type="password" placeholder="Password" id="password" className={styles.input} onChange={(e) => setPassword(e.target.value)}/>
+                    </div>
+                </div>
+                <div className={styles.bigGroup}>
+                    <div className={styles.group}>
+                        <div className={styles.labelWithIcon}>
+                            <span className="material-symbols-outlined">person</span>
+                            <label htmlFor="firstName" className={styles.label}>First Name</label>
+                        </div>
+                        <input type="text" placeholder="First Name" id="firstName" className={styles.input} onChange={(e) => setFirstName(e.target.value)}/>
+                    </div>
+                    <div className={styles.group}>
+                        <div className={styles.labelWithIcon}>
+                            <span className="material-symbols-outlined">person</span>
+                            <label htmlFor="lastName" className={styles.label}>Last Name</label>
+                        </div>
+                        <input type="text" placeholder="Last Name" id="lastName" className={styles.input} onChange={(e) => setLastName(e.target.value)}/>
+                    </div>
                 </div>
                 <div className={styles.group}>
-                    <label htmlFor="password" className={styles.label}>Password</label>
-                    <input type="password" placeholder="Password" id="password" className={styles.input} onChange={(e) => setPassword(e.target.value)}/>
-                </div>
-                <div className={styles.group}>
-                    <label htmlFor="firstName" className={styles.label}>First Name</label>
-                    <input type="text" placeholder="First Name" id="firstName" className={styles.input} onChange={(e) => setFirstName(e.target.value)}/>
-                </div>
-                <div className={styles.group}>
-                    <label htmlFor="lastName" className={styles.label}>Last Name</label>
-                    <input type="text" placeholder="Last Name" id="lastName" className={styles.input} onChange={(e) => setLastName(e.target.value)}/>
-                </div>
-                <div className={styles.group}>
-                    <label htmlFor="description" className={styles.label}>Description</label>
+                    <div className={styles.labelWithIcon}>
+                        <span className="material-symbols-outlined">description</span>
+                        <label htmlFor="description" className={styles.label}>Description</label>
+                    </div>
                     <input type="text" placeholder="Description" id="description" className={styles.input} onChange={(e) => setDescription(e.target.value)}/>
                 </div>
                 <div className={styles.group}>
-                    <label htmlFor="email" className={styles.label}>Email</label>
+                    <div className={styles.labelWithIcon}>
+                        <span className="material-symbols-outlined">mail</span>
+                        <label htmlFor="email" className={styles.label}>Email</label>
+                    </div>
                     <input type="email" placeholder="Email" id="email" className={styles.input} onChange={(e) => setEmail(e.target.value)}/>
                 </div>
-                <div className={styles.group}>
-                    <button type="submit" className={styles.button}>Register</button>
-                </div>
-                <p className={styles.message}>{message}</p>
+                <button type="submit" className={styles.button}>Register</button>
+                {message.length > 0 && <p className={styles.message}>{message}</p>}
+                <p className={styles.linkContainer}>Already have an account? <a href="/login" className={styles.link}>Login</a></p>
             </form>
         </div>
     )

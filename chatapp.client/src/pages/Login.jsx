@@ -42,17 +42,27 @@ export default function Login() {
     return (
         <div className={styles.container}>
             <form className={styles.form} onSubmit={submitForm}>
-                <h1>Login</h1>
+                <p className={styles.title}>Login</p>
                 <div className={styles.group}>
-                    <label htmlFor="email" className={styles.label}>Email</label>
+                    <div className={styles.labelWithIcon}>
+                        <span className="material-symbols-outlined">mail</span>
+                        <label htmlFor="email" className={styles.label}>
+                            Email
+                        </label>
+                    </div>
                     <input type="email" id="email" placeholder="Email" className={styles.input} onChange={(e) => setEmail(e.target.value)}/>
                 </div>
                 <div className={styles.group}>
-                    <label htmlFor="password" className={styles.label}>Password</label>
+                <div className={styles.labelWithIcon}>
+                        <span className="material-symbols-outlined">mail</span>
+                        <label htmlFor="password" className={styles.label}>Password</label>
+                    </div>
+                    
                     <input type="password" id="password" placeholder="Password" className={styles.input} onChange={(e) => setPassword(e.target.value)}/>
                 </div>
                 <button type="submit" className={styles.button}>Login</button>
-                <p className={styles.message}>{message}</p>
+                {message.length > 0 && <p className={styles.message}>{message}</p>}
+                <p className={styles.linkContainer}>Don't have an account? <a href="/register" className={styles.link}>Register</a></p>
             </form>
         </div>
     )

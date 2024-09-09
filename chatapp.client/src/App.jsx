@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, createContext } from 'react'
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
@@ -7,14 +7,20 @@ import Authorize from './components/Authorize'
 import HomePage from './pages/HomePage'
 import { Context } from './components/Context'
 
+export const ThemeContext = createContext()
+
 function App() {
 
+    const [ darkMode, setDarkMode ] = useState(true)
+
     useEffect(() => {
-    }, [])
+        document.body.className = darkMode ? 'dark' : 'light'
+    }, [darkMode])
 
     
     return (<>
     <Context>
+        <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Authorize><HomePage></HomePage></Authorize>} />
@@ -22,6 +28,7 @@ function App() {
                 <Route path="/register" element={<Register></Register>} />
             </Routes>
         </BrowserRouter>
+        </ThemeContext.Provider>
     </Context>
     </>)
     

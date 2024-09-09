@@ -1,0 +1,119 @@
+.container{
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient);
+}
+
+.form{
+    text-align: center;
+    max-width: 800px;
+    min-width: 45%;
+    padding: 0;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    background-color: var(--bg-color1);
+    color: var(--txt-color2);
+    border-radius: 10px;
+    box-shadow: 0 0 10px black;
+}
+
+.form > *{
+    display: block;
+    margin: 2rem auto;
+}
+
+.group{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 0.5rem;
+}
+
+.button{
+    border: 1px solid var(--primary-color);
+    padding: 1rem;
+    background-color: var(--bg-color1);
+    color: var(--txt-color1);
+    border-radius: 1rem;
+    transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.input{
+    border: 1px solid var(--primary-color);
+    padding: 1rem;
+    background-color: var(--bg-color1);
+    color: var(--txt-color1);
+    border-radius: 1rem;
+}
+
+.input:focus{
+    outline: 1px solid var(--secondary-color);
+}
+
+.input:-internal-autofill-selected{
+    background-color: var(--bg-color1) !important;
+}
+
+.title{
+    font-size: 2rem;
+    color: var(--txt-color1);
+}
+
+.linkContainer{
+    font-size: 0.8rem;
+}
+
+.link{
+    color: var(--secondary-color);
+    border-bottom: 2px solid var(--primary-color);
+    outline: none;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.message{
+    color: red;
+    font-size: 0.8rem;
+}
+
+.bigGroup{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.labelWithIcon{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+    justify-content: center;
+}
+
+.button:hover{
+    background-image: var(--gradient);
+    cursor: pointer;
+    color: white;
+}
+
+@media screen and (max-width: 500px) {
+    .bigGroup{
+        flex-direction: column;
+    }
+    .form{
+        width: 95%;
+    }
+    .container{
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+    .group{
+        width: 100%;
+    }
+}
