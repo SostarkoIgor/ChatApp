@@ -10,7 +10,7 @@ namespace ChatApp.Server.Dtos
         public string Token { get; set; }
 
         //key with which user will decode messages ment for them
-        public string PrivateEncriptedKey {  get; set; }
+        public string PrivateEncryptedKey {  get; set; }
 
         //roles of user
         public IList<string> Roles { get; set; }

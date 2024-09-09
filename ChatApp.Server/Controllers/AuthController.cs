@@ -102,7 +102,7 @@ namespace ChatApp.Server.Controllers
                 return Ok(new LoginResponseDto()
                 {
                     Token = token,
-                    PrivateEncriptedKey = await _userService.GetEncriptedPrivateKeyOfUserWithMailAsync(user.Email),
+                    PrivateEncryptedKey = await _userService.GetEncriptedPrivateKeyOfUserWithMailAsync(user.Email),
                     Roles = await _userManager.GetRolesAsync(user),
                     Salt = user.Salt,
                     IV = user.IV
