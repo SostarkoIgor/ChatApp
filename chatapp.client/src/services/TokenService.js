@@ -56,20 +56,20 @@ export function removeToken() {
 }
 
 //extracts mail from token
-export function extractEmail(token) {
+export function extractEmail() {
     try {
-        const decoded = jwtDecode(token);
-        return decoded.email;
+        const decoded = jwtDecode(getToken());
+        return decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
     } catch (e) {
         return null;
     }
 }
 
 //extracts roles from token
-export function extractRoles(token) {
+export function extractRoles() {
     try {
-        const decoded = jwtDecode(token);
-        return decoded.roles;
+        const decoded = jwtDecode(getToken());
+        return decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
     } catch (e) {
         return null;
     }

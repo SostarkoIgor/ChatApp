@@ -97,7 +97,7 @@ namespace ChatApp.Server.Controllers
             if (result.Succeeded)
             {
                 //if sign in is succesfull we generate and return token, alongside aforementioned key and roles
-                var token = GenerateJwtToken(user);
+                var token = await GenerateJwtTokenAsync(user);
 
                 return Ok(new LoginResponseDto()
                 {
@@ -114,15 +114,20 @@ namespace ChatApp.Server.Controllers
         }
 
         //function for generating token
-        private string GenerateJwtToken(ChatUser user)
+        private async Task<string> GenerateJwtTokenAsync(ChatUser user)
         {
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email)
             };
+
+            foreach (var role in (await _userManager.GetRolesAsync(user)))
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             //we get key to sign token
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));

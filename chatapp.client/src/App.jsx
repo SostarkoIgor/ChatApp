@@ -6,6 +6,8 @@ import Register from './pages/Register'
 import Authorize from './components/Authorize'
 import HomePage from './pages/HomePage'
 import { Context } from './components/Context'
+import ReenterPassword from './pages/ReenterPassword'
+
 
 export const ThemeContext = createContext()
 
@@ -26,6 +28,7 @@ function App() {
                 <Route path="/" element={<Authorize><HomePage></HomePage></Authorize>} />
                 <Route path="/login" element={<Login></Login>} />
                 <Route path="/register" element={<Register></Register>} />
+                <Route path="/reenterPassword" element={<ReenterPassword></ReenterPassword>} />
             </Routes>
         </BrowserRouter>
         </ThemeContext.Provider>

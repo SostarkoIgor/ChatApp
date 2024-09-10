@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { isValidToken, getToken, removeToken } from '../services/TokenService'
 import Navbar from '../components/Navbar'
 import { AppContext } from '../components/Context'
@@ -14,6 +14,8 @@ function Authorize({ children }) {
   const iv = getIV()
   const salt = getSalt()
 
+  const navigate = useNavigate()
+
   useEffect(() => {
     async function start(){
       
@@ -21,15 +23,11 @@ function Authorize({ children }) {
         if (email === null) setEmail(extractEmail(token))
         if (roles === null) setRoles(extractRoles(token))
         if (key && salt && iv && privateKey === null){
-          let password=window.prompt("Please enter your password")
-          if (password){
-            let key_=await decryptPrivateKey(key, password, iv, salt)
-            setPrivateKey(key_)
-          }
+          navigate('/reenterPassword')
         }
         else if (!key || !salt || !iv ){
           removeToken()
-          window.location.href = '/login'
+          navigate('/login')
         }
       }
     }
