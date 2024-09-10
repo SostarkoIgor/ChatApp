@@ -1,0 +1,25 @@
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--bg-color1);
+    color: var(--txt-color1);
+}
+
+.centerNavBar{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.navItem:hover{
+    cursor: pointer;
+    color: var(--primary-color);
+}
+
+@media screen and (max-width: 700px) {
+    .navBarLabel{
+        display: none;
+    }
+}

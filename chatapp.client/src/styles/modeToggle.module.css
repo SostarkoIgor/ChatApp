@@ -7,7 +7,7 @@
     border: 2px solid var(--txt-color2);
     display: flex;
     align-items: center;
-    margin: 0 auto;
+    /* margin: 0 auto; */
     gap: 0.4rem;
     flex-direction: row;
 

@@ -6,7 +6,7 @@ function ChangeAppMode() {
     const theme = useContext(ThemeContext)
 
     return (
-        <>
+        
             <div className={theme.darkMode ? styles.dark : styles.light} onClick={() => theme.setDarkMode(!theme.darkMode)}>
                 
                 <span className={"material-symbols-outlined"} style={{visibility: theme.darkMode ? 'hidden' : 'visible'}}>dark_mode</span> 
@@ -14,7 +14,7 @@ function ChangeAppMode() {
                 <span className={"material-symbols-outlined"} style={{visibility: theme.darkMode ? 'visible' : 'hidden'}}>sunny</span>
                 
             </div>
-        </>
+        
     )
 }
 

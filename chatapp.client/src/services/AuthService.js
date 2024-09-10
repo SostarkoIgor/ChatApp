@@ -1,7 +1,11 @@
 import axios from "axios"
-import { getToken } from "./TokenService"
+import { getToken, removeToken } from "./TokenService"
 
 const source = "https://localhost:7109"
+
+export async function Logout() {
+    removeToken()
+}
 
 //method to log in user
 export async function Login(Email, Password) {

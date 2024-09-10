@@ -102,7 +102,13 @@
     color: white;
 }
 
-@media screen and (max-width: 500px) {
+.changeMode{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+@media screen and (max-width: 700px) {
     .bigGroup{
         flex-direction: column;
     }

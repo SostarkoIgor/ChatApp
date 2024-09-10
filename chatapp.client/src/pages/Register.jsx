@@ -80,7 +80,7 @@ export default function Register() {
                 <button type="submit" className={styles.button}>Register</button>
                 {message.length > 0 && <p className={styles.message}>{message}</p>}
                 <p className={styles.linkContainer}>Already have an account? <a onClick={(e) => navigate('/login')} className={styles.link}>Login</a></p>
-                <div className={styles.group}>
+                <div className={`${styles.group} ${styles.changeMode}`}>
                     <ChangeAppMode />
                 </div>
             </form>

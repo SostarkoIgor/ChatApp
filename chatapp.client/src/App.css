@@ -26,3 +26,12 @@ body{
     --primary-color: #39A0ED;
     --secondary-color: #13C4A3;
 }
+
+.labelWithIcon{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+    justify-content: center;
+}
