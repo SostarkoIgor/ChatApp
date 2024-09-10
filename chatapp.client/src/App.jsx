@@ -11,7 +11,7 @@ export const ThemeContext = createContext()
 
 function App() {
 
-    const [ darkMode, setDarkMode ] = useState(true)
+    const [ darkMode, setDarkMode ] = useState(false)
 
     useEffect(() => {
         document.body.className = darkMode ? 'dark' : 'light'

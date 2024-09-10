@@ -2,6 +2,8 @@ import styles from '../styles/auth.module.css'
 import { useState } from 'react'
 import { Register as register } from '../services/AuthService'
 import { Navigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import ChangeAppMode from '../components/ChangeAppMode'
 export default function Register() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -12,11 +14,13 @@ export default function Register() {
 
     const [message, setMessage] = useState('')
 
+    const navigate = useNavigate()
+
     const submitForm = async (e) => {
         e.preventDefault()
         let response = await register(username, password, firstName, lastName, description, email)
         if (response.success) {
-            window.location.href = '/login'
+            navigate('/login')
         }
         else {
             setMessage("Error registering.")
@@ -75,7 +79,10 @@ export default function Register() {
                 </div>
                 <button type="submit" className={styles.button}>Register</button>
                 {message.length > 0 && <p className={styles.message}>{message}</p>}
-                <p className={styles.linkContainer}>Already have an account? <a href="/login" className={styles.link}>Login</a></p>
+                <p className={styles.linkContainer}>Already have an account? <a onClick={(e) => navigate('/login')} className={styles.link}>Login</a></p>
+                <div className={styles.group}>
+                    <ChangeAppMode />
+                </div>
             </form>
         </div>
     )

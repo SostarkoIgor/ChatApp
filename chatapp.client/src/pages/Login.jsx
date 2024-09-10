@@ -4,6 +4,7 @@ import { Login as login } from '../services/AuthService'
 import { setToken } from '../services/TokenService'
 import { AppContext } from '../components/Context'
 import { useNavigate } from 'react-router-dom'
+import ChangeAppMode from '../components/ChangeAppMode'
 
 //login page component
 export default function Login() {
@@ -54,7 +55,7 @@ export default function Login() {
                 </div>
                 <div className={styles.group}>
                 <div className={styles.labelWithIcon}>
-                        <span className="material-symbols-outlined">mail</span>
+                        <span className="material-symbols-outlined">password</span>
                         <label htmlFor="password" className={styles.label}>Password</label>
                     </div>
                     
@@ -62,7 +63,10 @@ export default function Login() {
                 </div>
                 <button type="submit" className={styles.button}>Login</button>
                 {message.length > 0 && <p className={styles.message}>{message}</p>}
-                <p className={styles.linkContainer}>Don't have an account? <a href="/register" className={styles.link}>Register</a></p>
+                <p className={styles.linkContainer}>Don't have an account? <a className={styles.link} onClick={() => navigate('/register')}>Register</a></p>
+                <div className={styles.group}>
+                    <ChangeAppMode></ChangeAppMode>
+                </div>
             </form>
         </div>
     )

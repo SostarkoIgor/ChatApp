@@ -1,0 +1,19 @@
+.dark, .light {
+    font-weight: bold;
+    border-radius: 1rem;
+    padding: 1px;
+    cursor: pointer;
+    width: fit-content;
+    border: 2px solid var(--txt-color2);
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    gap: 0.4rem;
+    flex-direction: row;
+
+    transition: all 0.3s ease;
+}
+
+.dark:hover, .light:hover {
+    color:rgb(138, 138, 4);
+}
