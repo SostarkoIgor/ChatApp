@@ -38,7 +38,7 @@ namespace ChatApp.Server.Controllers
                 var users=postMessage.EachUserData.Select(a=>a.ReceiverUsername).ToList();
                 users.Add(currentLoggedInUser?.UserName);
                 await _conversationService.CreateConversationIfDoesNotExistAsync(users, postMessage.ConvoId);
-                await _messageService.PostMessageToConversationAsync(postMessage, currentLoggedInUser);
+                await _messageService.PostMessageToConversationAsync(postMessage, currentLoggedInUser, await _conversationService.GetConversationByIdAsync(postMessage.ConvoId));
                 return Created();
             }
             catch (Exception ex)

@@ -9,11 +9,9 @@ namespace ChatApp.Server.Services
     public class MessageService : IMessageService
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IConversationService _conversationService;
-        public MessageService(AppDbContext appDbContext, IConversationService conversationService)
+        public MessageService(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
-            _conversationService = conversationService;
         }
 
         public async Task<MessageToUserDto?> GetLastConvoMessage(int convoID)
@@ -23,11 +21,11 @@ namespace ChatApp.Server.Services
                 .FirstOrDefaultAsync());
         }
 
-        public async Task<bool> PostMessageToConversationAsync(PostMessageToConversation postMessageToConversation, ChatUser? sender)
+        public async Task<bool> PostMessageToConversationAsync(PostMessageToConversation postMessageToConversation, ChatUser? sender, Conversation? conversation)
         {
             if (sender == null || postMessageToConversation.EachUserData == null) { return false; }
 
-            Conversation? conversation = await _conversationService.GetConversationByIdAsync(postMessageToConversation.ConvoId);
+            
             if (conversation == null)
             {
                 return false;

@@ -3,6 +3,7 @@ using ChatApp.Server.Dtos;
 using ChatApp.Server.Interfaces;
 using ChatApp.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ChatApp.Server.Services
 {
@@ -18,15 +19,16 @@ namespace ChatApp.Server.Services
             _userService = userService;
         }
 
-        public bool ConversationExists(int convoId)
+        public bool ConversationExists(int? convoId)
         {
+            if (convoId == null) return false;
             if (_appDbContext.Conversations.Where(a => a.Id == convoId).Count() > 0)
             { return true; }
             return false;
         }
-        public async Task CreateConversationIfDoesNotExistAsync(List<string?>? usersNames, int convoId)
+        public async Task CreateConversationIfDoesNotExistAsync(List<string?>? usersNames, int? convoId)
         {
-            if (usersNames == null || ConversationExists(convoId)) return;
+            if (usersNames == null || convoId==null || ConversationExists(convoId)) return;
             List<ChatUser> users = new();
             foreach (var userName in usersNames)
             {
