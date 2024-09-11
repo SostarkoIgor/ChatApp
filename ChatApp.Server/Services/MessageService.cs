@@ -1,0 +1,23 @@
+﻿using ChatApp.Server.Data;
+using ChatApp.Server.Dtos;
+using ChatApp.Server.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace ChatApp.Server.Services
+{
+    public class MessageService : IMessageService
+    {
+        private readonly AppDbContext _appDbContext;
+        public MessageService(AppDbContext appDbContext)
+        {
+            _appDbContext = appDbContext;
+        }
+
+        public async Task<MessageToUserDto?> GetLastConvoMessage(int convoID)
+        {
+            return (await _appDbContext.Messages.Where(a => a.ConversationId == convoID).OrderByDescending(a => a.SentAt)
+                .Select(a =>new MessageToUserDto { MessageCrypted=a.Text, MessageRead=a.IsRead, MessageSentAt=a.SentAt})
+                .FirstOrDefaultAsync());
+        }
+    }
+}
