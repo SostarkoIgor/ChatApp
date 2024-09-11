@@ -29,5 +29,10 @@ namespace ChatApp.Server.Services
             }
             return (await _userManager.FindByEmailAsync(userMail))?.EncriptedPrivateKey;
         }
+
+        public async Task<ChatUser?> GetUserByUsernameAsync(string userName)
+        {
+            return await _appDbContext.ChatUsers.Where(a=>a.UserName==userName).FirstOrDefaultAsync();
+        }
     }
 }

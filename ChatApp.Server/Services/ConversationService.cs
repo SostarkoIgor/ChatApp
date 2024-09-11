@@ -10,10 +10,46 @@ namespace ChatApp.Server.Services
     {
         private readonly AppDbContext _appDbContext;
         private readonly IMessageService _messageService;
-        public ConversationService(AppDbContext appDbContext, IMessageService messageService)
+        private readonly IUserService _userService;
+        public ConversationService(AppDbContext appDbContext, IMessageService messageService, IUserService userService)
         {
             _appDbContext = appDbContext;
             _messageService = messageService;
+            _userService = userService;
+        }
+
+        public bool ConversationExists(int convoId)
+        {
+            if (_appDbContext.Conversations.Where(a => a.Id == convoId).Count() > 0)
+            { return true; }
+            return false;
+        }
+        public async Task CreateConversationIfDoesNotExistAsync(List<string?>? usersNames, int convoId)
+        {
+            if (usersNames == null || ConversationExists(convoId)) return;
+            List<ChatUser> users = new();
+            foreach (var userName in usersNames)
+            {
+                if (userName == null) continue;
+                ChatUser? user = await _userService.GetUserByUsernameAsync(userName);
+                if (user == null) continue;
+                users.Add(user);
+            }
+            if (users.Count >= 2)
+            {
+                await _appDbContext.Conversations.AddAsync(new Conversation()
+                {
+                    Users = users,
+                    Messages = new List<Message>()
+                });
+                await _appDbContext.SaveChangesAsync();
+            }
+            else return;
+        }
+
+        public async Task<Conversation?> GetConversationByIdAsync(int? conversationId)
+        {
+            return await _appDbContext.Conversations.Where(a => a.Id == conversationId).FirstOrDefaultAsync();
         }
 
         public async Task<List<GetUserConvosDto>> GetUserConvosAsync(ChatUser user)
