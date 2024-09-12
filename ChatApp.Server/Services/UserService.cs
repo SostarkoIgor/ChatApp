@@ -1,4 +1,5 @@
 ﻿using ChatApp.Server.Data;
+using ChatApp.Server.Dtos;
 using ChatApp.Server.Interfaces;
 using ChatApp.Server.Models;
 using Microsoft.AspNetCore.Identity;
@@ -33,6 +34,32 @@ namespace ChatApp.Server.Services
         public async Task<ChatUser?> GetUserByUsernameAsync(string userName)
         {
             return await _appDbContext.ChatUsers.Where(a=>a.UserName==userName).FirstOrDefaultAsync();
+        }
+
+        public async Task<UserDataDto?> GetUserDataAsync(string userName)
+        {
+            ChatUser? user = await GetUserByUsernameAsync(userName);
+            if (user == null) { return null; }
+            return new UserDataDto()
+            {
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Description = user.Description,
+                PublicKey = user.PublicKey
+            };
+        }
+
+        public async Task<SearchUsersByUsernameResponseDto> GetUsersByUsernameAsync(string username)
+        {
+            var users = await _appDbContext.Users.Where(a =>a.UserName.Contains(username))
+                .Where(a=> !a.UserName.Equals(_httpContextAccessor.HttpContext.User.Identity.Name)).Select(a =>
+                new SearchUsersByUsernameResponseDto.UserInfo()
+                {
+                    PublicKey = a.PublicKey,
+                    Username = a.UserName
+                }).Take(10).ToListAsync();
+            return new SearchUsersByUsernameResponseDto() { Users = users };
         }
     }
 }
