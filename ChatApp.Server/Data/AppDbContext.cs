@@ -24,6 +24,12 @@ namespace ChatApp.Server.Data
                 .HasForeignKey(b => b.BlockedChatUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Message>()
+                .HasOne(a=>a.EncryptedFor)
+                .WithMany(a=>a.EncryptedForUser)
+                .HasForeignKey(a=>a.EncryptedForId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
 
         //dbsets for our entities
