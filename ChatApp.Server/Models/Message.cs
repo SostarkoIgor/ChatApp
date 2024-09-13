@@ -11,6 +11,8 @@
 
         public string SenderId { get; set; }
         public int ConversationId  { get; set; }
+        public string EncryptedForId { get; set; }
+        public ChatUser EncryptedFor { get; set; }
         public ChatUser Sender { get; set; }
         public Conversation Conversation { get; set; }
 

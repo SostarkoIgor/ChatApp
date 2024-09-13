@@ -36,6 +36,8 @@ namespace ChatApp.Server.Models
         public ICollection<Conversation> Conversations { get; set; }
         public ICollection<Message> Messages { get; set; }
 
+        public ICollection<Message> EncryptedForUser { get; set; }
+
         public ICollection<Block> BlockedUsers { get; set; }
 
         public ICollection<Block> BlockedByUsers { get; set; }
