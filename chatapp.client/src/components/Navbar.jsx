@@ -2,10 +2,18 @@ import styles from '../styles/navbar.module.css'
 import ChangeAppMode from './ChangeAppMode'
 import { Logout } from '../services/AuthService'
 import { useNavigate } from 'react-router-dom'
+import { AppContext } from '../components/Context'
+import { useContext, useState } from 'react'
+import SearchUsers from './SearchUsers'
 
 function Navbar() {
     const navigate = useNavigate()
+    const appContext = useContext(AppContext)
+
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
     return (<>
+    {isModalOpen && <SearchUsers closeWindow={() => setIsModalOpen(false)} />}
     <div className={styles.navbar}>
         <div className={`${styles.logo} labelWithIcon`}>
             <span className="material-symbols-outlined">chat</span>
@@ -16,7 +24,7 @@ function Navbar() {
                 <span className="material-symbols-outlined">home</span>
                 <span className={styles.navBarLabel}>Home</span>
             </div>
-            <div className={`${styles.navItem} labelWithIcon`}>
+            <div className={`${styles.navItem} labelWithIcon`} onClick={() => setIsModalOpen(true)}>
                 <span className="material-symbols-outlined">search</span>
                 <span className={styles.navBarLabel}>Search</span>
             </div>

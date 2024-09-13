@@ -25,6 +25,9 @@ body{
 
     --primary-color: #39A0ED;
     --secondary-color: #13C4A3;
+
+    --txt-dark-color1: #101010;
+    --txt-dark-color2: #232323d4;
 }
 
 .labelWithIcon{
