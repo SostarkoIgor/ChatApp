@@ -8,15 +8,25 @@ export const Context = ({ children }) => {
     const [email, setEmail] = useState(null)
 
     const [userKeys, setUserKeys] = useState({})
+    const [conversations, setConversations] = useState([])
+
+    const [selectedConvo, setSelectedConvo] = useState(null)
 
     const addUserKey = (key) => {
         setUserKeys({ ...userKeys, [key]: true })
+    }
+
+    const addConversation = (conversation_) => {
+        setConversations([...conversations, conversation_])
     }
     
     
 
     return (
-        <AppContext.Provider value={{ privateKey, setPrivateKey, roles, setRoles, email, setEmail, userKeys, setUserKeys, addUserKey }}>
+        <AppContext.Provider
+        value={{ privateKey, setPrivateKey, roles, setRoles, email, setEmail, userKeys,
+        setUserKeys, addUserKey, conversations, setConversations, addConversation,
+        selectedConvo, setSelectedConvo }}>
             {children}
         </AppContext.Provider>
     )

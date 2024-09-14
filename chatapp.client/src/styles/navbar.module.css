@@ -3,8 +3,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background-color: var(--bg-color1);
-    color: var(--txt-color1);
+    background-color: var(--secondary-color);
+    color: var(--txt-dark-color1);
 }
 
 .centerNavBar{
@@ -13,9 +13,13 @@
     align-items: center;
 }
 
+.navItem{
+    transition: scale 0.3s;
+}
+
 .navItem:hover{
     cursor: pointer;
-    color: var(--primary-color);
+    scale: 1.1;
 }
 
 @media screen and (max-width: 700px) {

@@ -1,7 +1,10 @@
-
+import ConvoList from '../components/ConvoList'
+import styles from '../styles/homePage.module.css'
 function HomePage() {
     return (<>
-    Hi
+    <div className={styles.container}>
+        <ConvoList></ConvoList>
+    </div>
     </>)
 }
 

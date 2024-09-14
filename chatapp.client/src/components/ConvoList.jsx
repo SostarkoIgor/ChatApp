@@ -5,14 +5,19 @@ import { getConversations } from '../services/ConvoService'
 
 
 export default function ConvoList() {
-    const [conversations, setConversations] = useState(null)
 
-    const { privateKey, userKeys, setPrivateKey } = useContext(AppContext)
+    const { privateKey, userKeys, setPrivateKey, conversations, setConversations } = useContext(AppContext)
 
 
     useEffect(() => {
         async function start() {
-            setConversations(await getConversations())
+            const response = await getConversations()
+            if (response.success)
+
+                setConversations(response.conversations)
+
+
+            console.log(conversations)
         }
 
         start()
@@ -23,7 +28,24 @@ export default function ConvoList() {
         <div className={styles.container}>
             <div className={styles.title}>Conversations</div>
             <div className={styles.conversations}>
-                {conversations}
+                {conversations.map((conversation, index) => {
+                    return (
+                        <div className={styles.conversation} key={index}>
+                            <div className={styles.conversationGroup}>
+                                <div className={styles.profilePic}>
+                                    <img src="https://picsum.photos/200/300" alt="Placeholder Image" />
+                                </div>
+                                <div className={styles.username}>{conversation.otherConvoUsers[0].userName}</div>
+                            </div>
+                            <div className={styles.conversationGroup}>
+                                <div className={styles.lastMessage}>
+                                    {conversation.lastMessage}
+                                </div>
+                            </div>
+                        </div>
+                    )
+                })
+                }
             </div>
         </div>
     )

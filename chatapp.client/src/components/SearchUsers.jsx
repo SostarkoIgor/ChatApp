@@ -1,14 +1,16 @@
 import windowStyles from '../styles/window.module.css'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { getUsersByUsername } from '../services/UserService'
+import { startConvo } from '../services/ConvoService'
+import { AppContext } from '../components/Context'
 function SearchUsers({closeWindow}) {
+    const {conversations, addConversation, selectedConvo, setSelectedConvo} = useContext(AppContext)
     const [searchValue, setSearchValue] = useState('')
     const [users, setUsers] = useState([])
     const [message, setMessage] = useState('')
     const search = () => {
         getUsersByUsername(searchValue).then((response) => {
             if (response.success) {
-                console.log(response)
                 setUsers(response.users)
                 setMessage('')
             }
@@ -17,6 +19,27 @@ function SearchUsers({closeWindow}) {
             }
         })
     }
+
+    const startConversation = async (user) => {
+        let convo = conversations.find(convo => {
+            const userNames = convo.otherConvoUsers.map(user => user.userName);
+            return userNames.includes(user) && userNames.length === 2;
+        })
+        console.log(convo)
+        if (convo !== undefined) {
+            setSelectedConvo(convo.convoId)
+            closeWindow()
+            return
+        }
+        let response = await startConvo(user)
+        if (response.success) {
+            console.log(response)
+            addConversation(response.convo)
+            console.log(conversations)
+        }
+        closeWindow()
+    }
+
     return (
         <div className={windowStyles.window} onClick={()=>{}/*(e)=>{e.stopPropagation(); closeWindow();}*/}>
             <div className={windowStyles.container}>
@@ -46,7 +69,9 @@ function SearchUsers({closeWindow}) {
                                     <div className={windowStyles.username}>{user.username}</div>
                                 </div>
                                 <div className={windowStyles.userGroup}>
-                                    <span className={`material-symbols-outlined ${windowStyles.action}`}>message</span>
+                                    <span className={`material-symbols-outlined ${windowStyles.action}`} onClick={() => startConversation(user.username)}>
+                                        message
+                                    </span>
                                     <span className={`material-symbols-outlined ${windowStyles.action}`}>block</span>
                                 </div>
                             </div>

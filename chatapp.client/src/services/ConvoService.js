@@ -10,8 +10,32 @@ export async function getConversations() {
             }
         })
 
-        return response.data
+        return {
+            success: true,
+            conversations: response.data
+        }
     } catch (error) {
-        console.log(error)
+        return {
+            success: false
+        }
+    }
+}
+
+export async function startConvo(userName) {
+    try{
+        let response = await axios.get(source + '/api/Conversations/'+userName, {
+            headers: {
+                Authorization: 'Bearer ' + getToken()
+            }
+        })
+        return {
+            success: true,
+            convo: response.data
+        }
+    }
+    catch(error){
+        return {
+            success: false
+        }
     }
 }
