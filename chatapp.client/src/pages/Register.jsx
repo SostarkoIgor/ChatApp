@@ -1,6 +1,6 @@
 import styles from '../styles/auth.module.css'
 import { useState } from 'react'
-import { Register as register } from '../services/AuthService'
+import { Register as register } from '../services/AuthAndKeyService'
 import { Navigate } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import ChangeAppMode from '../components/ChangeAppMode'

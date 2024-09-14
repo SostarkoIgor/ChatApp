@@ -1,6 +1,6 @@
 import styles from '../styles/auth.module.css'
 import { useState, useContext } from 'react'
-import { Login as login } from '../services/AuthService'
+import { Login as login } from '../services/AuthAndKeyService'
 import { setToken } from '../services/TokenService'
 import { AppContext } from '../components/Context'
 import { useNavigate } from 'react-router-dom'

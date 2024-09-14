@@ -252,3 +252,19 @@ async function importPrivateKey(privateKeyBase64) {
     )
 }
 
+export async function convertFromBase64ToPublicRSAKey(keyBase64){
+
+    //we convert base64 string to Uint8Array
+    const keyBuffer = base64ToUint8Array(keyBase64)
+    //we import private key
+    return window.crypto.subtle.importKey(
+        'spki',
+        keyBuffer,
+        {
+            name: 'RSA-OAEP',
+            hash: 'SHA-256'
+        },
+        true,
+        ['encrypt']
+    )
+}

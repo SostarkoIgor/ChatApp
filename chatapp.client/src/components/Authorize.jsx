@@ -4,7 +4,7 @@ import { isValidToken, getToken, removeToken } from '../services/TokenService'
 import Navbar from '../components/Navbar'
 import { AppContext } from '../components/Context'
 import { extractEmail, extractRoles } from '../services/TokenService'
-import { decryptPrivateKey } from '../services/AuthService'
+import { decryptPrivateKey } from '../services/AuthAndKeyService'
 import { getIV, getSalt, getKey } from '../services/KeyStoreService'
 
 function Authorize({ children }) {

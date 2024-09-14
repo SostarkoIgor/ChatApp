@@ -1,4 +1,4 @@
-import { decryptPrivateKey } from '../services/AuthService'
+import { decryptPrivateKey } from '../services/AuthAndKeyService'
 import { getIV, getSalt, getKey } from '../services/KeyStoreService'
 import { useState, useContext, useEffect } from 'react'
 import styles from '../styles/auth.module.css'
