@@ -1,4 +1,5 @@
 import styles from '../styles/convoList.module.css'
+import userStyles from '../styles/user.module.css'
 import { useContext, useState, useEffect } from 'react'
 import { AppContext } from '../components/Context'
 import { getConversations } from '../services/ConvoService'
@@ -6,18 +7,16 @@ import { getConversations } from '../services/ConvoService'
 
 export default function ConvoList() {
 
-    const { privateKey, userKeys, setPrivateKey, conversations, setConversations } = useContext(AppContext)
+    const { privateKey, userKeys, setPrivateKey, conversations, setConversations, selectedConvo, setSelectedConvo } = useContext(AppContext)
 
 
     useEffect(() => {
         async function start() {
-            const response = await getConversations()
-            if (response.success)
-
-                setConversations(response.conversations)
-
-
-            console.log(conversations)
+            if (conversations.length == 0){
+                const response = await getConversations()
+                if (response.success)
+                    setConversations(response.conversations)
+            }
         }
 
         start()
@@ -26,19 +25,19 @@ export default function ConvoList() {
 
     return (
         <div className={styles.container}>
-            <div className={styles.title}>Conversations</div>
+            {/* <div className={styles.title}>Conversations</div> */}
             <div className={styles.conversations}>
                 {conversations.map((conversation, index) => {
                     return (
-                        <div className={styles.conversation} key={index}>
-                            <div className={styles.conversationGroup}>
-                                <div className={styles.profilePic}>
+                        <div className={userStyles.user} key={index} onClick={() => setSelectedConvo(conversation.convoId)}>
+                            <div className={userStyles.userGroup}>
+                                <div className={userStyles.profilePic}>
                                     <img src="https://picsum.photos/200/300" alt="Placeholder Image" />
                                 </div>
-                                <div className={styles.username}>{conversation.otherConvoUsers[0].userName}</div>
+                                <div className={userStyles.username}>{conversation.otherConvoUsers[0].userName}</div>
                             </div>
-                            <div className={styles.conversationGroup}>
-                                <div className={styles.lastMessage}>
+                            <div className={userStyles.userGroup}>
+                                <div className={userStyles.lastMessage}>
                                     {conversation.lastMessage}
                                 </div>
                             </div>

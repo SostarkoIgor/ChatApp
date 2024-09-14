@@ -1,6 +1,6 @@
 import styles from '../styles/navbar.module.css'
 import ChangeAppMode from './ChangeAppMode'
-import { Logout } from '../services/AuthService'
+import { Logout } from '../services/AuthAndKeyService'
 import { useNavigate } from 'react-router-dom'
 import { AppContext } from '../components/Context'
 import { useContext, useState } from 'react'
@@ -32,7 +32,7 @@ function Navbar() {
                 <span className="material-symbols-outlined">account_circle</span>
                 <span className={styles.navBarLabel}>Profile</span>
             </div>
-            <div className={`${styles.navItem} labelWithIcon`} onClick={() => { Logout(); navigate('/login');}}>
+            <div className={`${styles.navItem} labelWithIcon`} onClick={() => { Logout(); appContext.reset(); navigate('/login');}}>
                 <span className="material-symbols-outlined">logout</span>
                 <span className={styles.navBarLabel}>Logout</span>
             </div>

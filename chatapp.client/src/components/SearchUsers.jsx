@@ -1,10 +1,12 @@
 import windowStyles from '../styles/window.module.css'
+import userStyles from '../styles/user.module.css'
 import { useState, useContext } from 'react'
 import { getUsersByUsername } from '../services/UserService'
 import { startConvo } from '../services/ConvoService'
 import { AppContext } from '../components/Context'
+
 function SearchUsers({closeWindow}) {
-    const {conversations, addConversation, selectedConvo, setSelectedConvo} = useContext(AppContext)
+    const {conversations, addConversation, selectedConvo, setSelectedConvo, addPublicKeyIfNotPresent} = useContext(AppContext)
     const [searchValue, setSearchValue] = useState('')
     const [users, setUsers] = useState([])
     const [message, setMessage] = useState('')
@@ -35,6 +37,9 @@ function SearchUsers({closeWindow}) {
         if (response.success) {
             console.log(response)
             addConversation(response.convo)
+            setSelectedConvo(response.convo.convoId)
+            addPublicKeyIfNotPresent(response.convo.otherConvoUsers[0].userName, response.convo.otherConvoUsers[0].publicKey)
+            addPublicKeyIfNotPresent(response.convo.otherConvoUsers[1].userName, response.convo.otherConvoUsers[1].publicKey)
             console.log(conversations)
         }
         closeWindow()
@@ -61,18 +66,18 @@ function SearchUsers({closeWindow}) {
                 <div className={windowStyles.users}>
                     {users.map((user) => {
                         return (
-                            <div className={windowStyles.user} key={user.username}>
-                                <div className={windowStyles.userGroup}>
-                                    <div className={windowStyles.profilePic}>
+                            <div className={userStyles.user} key={user.username}>
+                                <div className={userStyles.userGroup}>
+                                    <div className={userStyles.profilePic}>
                                         <img src="https://picsum.photos/200/300" alt="Placeholder Image" />
                                     </div>
-                                    <div className={windowStyles.username}>{user.username}</div>
+                                    <div className={userStyles.username}>{user.username}</div>
                                 </div>
-                                <div className={windowStyles.userGroup}>
-                                    <span className={`material-symbols-outlined ${windowStyles.action}`} onClick={() => startConversation(user.username)}>
+                                <div className={userStyles.userGroup}>
+                                    <span className={`material-symbols-outlined ${userStyles.action}`} onClick={() => startConversation(user.username)}>
                                         message
                                     </span>
-                                    <span className={`material-symbols-outlined ${windowStyles.action}`}>block</span>
+                                    <span className={`material-symbols-outlined ${userStyles.action}`}>block</span>
                                 </div>
                             </div>
                         )
