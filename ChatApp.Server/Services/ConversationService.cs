@@ -54,6 +54,28 @@ namespace ChatApp.Server.Services
             return await _appDbContext.Conversations.Where(a => a.Id == conversationId).FirstOrDefaultAsync();
         }
 
+        public async Task<GetUserConvosDto?> GetUserConvoDtoForUserName(string userName, ChatUser currentUser)
+        {
+            if (!await _userService.ExistsUserWithUserNameAsync(userName)) return null;
+            List<GetUserConvosDto.ConvoUser> otherConvousers = new();
+            otherConvousers.Add(new GetUserConvosDto.ConvoUser()
+            {
+                UserName = userName,
+                PublicKey= await _userService.GetPublicKeyOfUserAsync(userName)
+            });
+            otherConvousers.Add(new GetUserConvosDto.ConvoUser()
+            {
+                UserName = currentUser.UserName,
+                PublicKey = currentUser.PublicKey
+            });
+            return new GetUserConvosDto()
+            {
+                ConvoId = -1,
+                OtherConvoUsers=otherConvousers
+            };
+
+        }
+
         public async Task<List<GetUserConvosDto>> GetUserConvosAsync(ChatUser user)
         {
             var conversations = await _appDbContext.Conversations

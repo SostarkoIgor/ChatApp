@@ -9,5 +9,6 @@ namespace ChatApp.Server.Interfaces
         public Task<Conversation?> GetConversationByIdAsync(int? conversationId);
         public Task CreateConversationIfDoesNotExistAsync(List<string?>? usersNames, int? convoId);
         public bool ConversationExists(int? convoId);
+        public Task<GetUserConvosDto?> GetUserConvoDtoForUserName(string userName, ChatUser currentUser);
     }
 }

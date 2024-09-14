@@ -21,6 +21,12 @@ namespace ChatApp.Server.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public async Task<bool> ExistsUserWithUserNameAsync(string userName)
+        {
+            bool rez = await _appDbContext.ChatUsers.AnyAsync(a => a.UserName == userName);
+            return rez;
+        }
+
         //gets private key of currently logged in user, returns it to them on login
         public async Task<string?> GetEncriptedPrivateKeyOfUserWithMailAsync(string userMail)
         {
@@ -29,6 +35,11 @@ namespace ChatApp.Server.Services
                 return null;
             }
             return (await _userManager.FindByEmailAsync(userMail))?.EncriptedPrivateKey;
+        }
+
+        public async Task<string?> GetPublicKeyOfUserAsync(string userName)
+        {
+            return (await _appDbContext.ChatUsers.Where(a=>a.UserName== userName).FirstOrDefaultAsync())?.PublicKey;
         }
 
         public async Task<ChatUser?> GetUserByUsernameAsync(string userName)

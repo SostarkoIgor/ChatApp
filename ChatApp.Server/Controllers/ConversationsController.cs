@@ -29,7 +29,13 @@ namespace ChatApp.Server.Controllers
         {
             return Ok(await _conversationService.GetUserConvosAsync(await _userManager.GetUserAsync(User)));
         }
-        
+        [HttpGet("{username}")]
+        public async Task<ActionResult<GetUserConvosDto>> StartConvoWithUser([FromRoute] string username)
+        {
+            GetUserConvosDto? getUserConvosDto = await _conversationService.GetUserConvoDtoForUserName(username, await _userManager.GetUserAsync(User));
+            if (getUserConvosDto == null) { return BadRequest(); }
+            return Ok(getUserConvosDto);
+        }
 
     }
 }
