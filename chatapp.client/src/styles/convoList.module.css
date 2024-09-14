@@ -1,0 +1,11 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--bg-color1);
+    min-height: 100vh;
+    min-width: 260px;
+    width: 20%;
+    color: var(--txt-color1);
+}
