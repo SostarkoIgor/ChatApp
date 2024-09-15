@@ -14,6 +14,7 @@ export default function ConvoList() {
         async function start() {
             if (conversations.length == 0){
                 const response = await getConversations()
+                console.log(response)
                 if (response.success){
                     setConversations(response.conversations)
                     for (let i = 0; i < response.conversations.length; i++) {
@@ -43,7 +44,7 @@ export default function ConvoList() {
                             </div>
                             <div className={userStyles.userGroup}>
                                 <div className={userStyles.lastMessage}>
-                                    {conversation.lastMessage}
+                                    {/* {conversation.lastMessage} */}
                                 </div>
                             </div>
                         </div>

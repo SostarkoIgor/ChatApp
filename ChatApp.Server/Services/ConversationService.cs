@@ -83,19 +83,29 @@ namespace ChatApp.Server.Services
         {
             var conversations = await _appDbContext.Conversations
             .Where(a => a.Users.Contains(user))
+            .Include(a=>a.Users)
             .ToListAsync();
 
-            
-            var convos = await Task.WhenAll(conversations.Select(async a => new GetUserConvosDto
+
+            var convos = new List<GetUserConvosDto>();
+
+            foreach (var a in conversations)
             {
-                ConvoId = a.Id,
-                LastMessage = await _messageService.GetLastConvoMessage(a.Id),
-                OtherConvoUsers = a.Users.Select(u => new GetUserConvosDto.ConvoUser
+                var lastMessage = await _messageService.GetLastConvoMessage(a.Id);
+                var users = a.Users.Select(u => new GetUserConvosDto.ConvoUser
                 {
                     UserName = u.UserName,
                     PublicKey = u.PublicKey
-                }).ToList()
-            }));
+                }).ToList();
+
+                convos.Add(new GetUserConvosDto
+                {
+                    ConvoId = a.Id,
+                    LastMessage = lastMessage,
+                    OtherConvoUsers = users
+                });
+            }
+
 
             return convos.ToList();
 
