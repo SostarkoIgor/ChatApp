@@ -3,12 +3,44 @@ import userStyles from '../styles/user.module.css'
 import { useContext, useState, useEffect } from 'react'
 import { AppContext } from '../components/Context'
 import { getConversations } from '../services/ConvoService'
+import { decryptMessage } from '../services/AuthAndKeyService'
 
 
 export default function ConvoList() {
 
-    const { privateKey, userKeys, setPrivateKey, conversations, setConversations, selectedConvo, setSelectedConvo, addUserKey } = useContext(AppContext)
+    const { privateKey, userKeys, setPrivateKey, conversations, setConversations, selectedConvo, setSelectedConvo, addUserKey, addPublicKeyIfNotPresent } = useContext(AppContext)
 
+    const formatDate = (date) => {
+            const messageDate = new Date(date);
+            const now = new Date();
+
+            
+            const isToday = (someDate) => {
+                return someDate.getDate() === now.getDate() &&
+                    someDate.getMonth() === now.getMonth() &&
+                    someDate.getFullYear() === now.getFullYear();
+            };
+
+            const isYesterday = (someDate) => {
+                const yesterday = new Date(now);
+                yesterday.setDate(now.getDate() - 1);
+                return someDate.getDate() === yesterday.getDate() &&
+                    someDate.getMonth() === yesterday.getMonth() &&
+                    someDate.getFullYear() === yesterday.getFullYear();
+            };
+
+            
+            const timeString = messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dateString = messageDate.toLocaleDateString();
+
+            if (isToday(messageDate)) {
+                return timeString; // Format: 14:57
+            } else if (isYesterday(messageDate)) {
+                return "Yesterday";
+            } else {
+                return dateString;
+            }
+}
 
     useEffect(() => {
         async function start() {
@@ -16,10 +48,13 @@ export default function ConvoList() {
                 const response = await getConversations()
                 console.log(response)
                 if (response.success){
-                    setConversations(response.conversations)
                     for (let i = 0; i < response.conversations.length; i++) {
-                        addUserKey(response.conversations[i].otherConvoUsers[0].publicKey ,response.conversations[i].otherConvoUsers[0].userName)
+                        console.log(response.conversations[i].otherConvoUsers[0].publicKey)
+                        for (let j = 0; j < response.conversations[i].otherConvoUsers.length; j++)
+                            await addPublicKeyIfNotPresent(response.conversations[i].otherConvoUsers[j].userName, response.conversations[i].otherConvoUsers[j].publicKey)
+                        response.conversations[i].lastMessage.message = await decryptMessage(privateKey, response.conversations[i].lastMessage.messageCrypted)
                     }
+                    setConversations(response.conversations)
                 }
             }
         }
@@ -44,8 +79,13 @@ export default function ConvoList() {
                             </div>
                             <div className={userStyles.userGroup}>
                                 <div className={userStyles.lastMessage}>
-                                    {/* {conversation.lastMessage} */}
+                                {conversation.lastMessage.message.length > 10 
+                                ? conversation.lastMessage.message.substring(0, 7) + "..." 
+                                : conversation.lastMessage.message}
                                 </div>
+                            </div>
+                            <div className={styles.sentAt}>
+                                {formatDate(conversation.lastMessage.messageSentAt)}
                             </div>
                         </div>
                     )

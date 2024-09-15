@@ -287,7 +287,7 @@ export async function encryptMessage(key, message) {
 }
 
 export async function decryptMessage(key, encryptedMessage) {
-    const encoder = new TextEncoder()
+    const decoder = new TextDecoder()
 
     const encryptedData = base64ToUint8Array(encryptedMessage)
 
@@ -299,6 +299,6 @@ export async function decryptMessage(key, encryptedMessage) {
         encryptedData
     )
 
-    return encoder.decode(decryptedData)
+    return decoder.decode(decryptedData)
 
 }
