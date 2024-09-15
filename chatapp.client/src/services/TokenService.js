@@ -74,3 +74,13 @@ export function extractRoles() {
         return null;
     }
 }
+
+//extracts username from token
+export function extractUsername() {
+    try {
+        const decoded = jwtDecode(getToken());
+        return decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+    } catch (e) {
+        return null;
+    }
+}

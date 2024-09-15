@@ -3,12 +3,12 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { isValidToken, getToken, removeToken } from '../services/TokenService'
 import Navbar from '../components/Navbar'
 import { AppContext } from '../components/Context'
-import { extractEmail, extractRoles } from '../services/TokenService'
+import { extractEmail, extractRoles, extractUsername } from '../services/TokenService'
 import { decryptPrivateKey } from '../services/AuthAndKeyService'
 import { getIV, getSalt, getKey } from '../services/KeyStoreService'
 
 function Authorize({ children }) {
-  const { setPrivateKey, setRoles, setEmail, roles, email, privateKey } = useContext(AppContext)
+  const { setPrivateKey, setRoles, setEmail, roles, email, privateKey, username, setUsername } = useContext(AppContext)
   const token = getToken()
   const key = getKey()
   const iv = getIV()
@@ -22,6 +22,7 @@ function Authorize({ children }) {
       if (token && isValidToken(token)){
         if (email === null) setEmail(extractEmail(token))
         if (roles === null) setRoles(extractRoles(token))
+        if (username === null) setUsername(extractUsername(token))
         if (key && salt && iv && privateKey === null){
           navigate('/reenterPassword')
         }

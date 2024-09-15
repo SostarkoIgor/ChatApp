@@ -14,9 +14,9 @@ namespace ChatApp.Server.Services
             _appDbContext = appDbContext;
         }
 
-        public async Task<MessageToUserDto?> GetLastConvoMessage(int convoID)
+        public async Task<MessageToUserDto?> GetLastConvoMessage(int convoID, ChatUser encrptedFor)
         {
-            return (await _appDbContext.Messages.Where(a => a.ConversationId == convoID).OrderByDescending(a => a.SentAt)
+            return (await _appDbContext.Messages.Where(a => a.ConversationId == convoID && a.EncryptedFor==encrptedFor).OrderByDescending(a => a.SentAt)
                 .Select(a =>new MessageToUserDto { MessageCrypted=a.Text, MessageRead=a.IsRead, MessageSentAt=a.SentAt})
                 .FirstOrDefaultAsync());
         }

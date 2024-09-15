@@ -20,6 +20,7 @@ export async function Login(Email, Password) {
         const privateKey = await decryptPrivateKey(response.data.privateEncryptedKey, Password, response.data.iv, response.data.salt)
         //we return response
         //response data contains private key, email, status and success (boolean)
+        console.log(response.data)
         return {
             success: true,
             status: response.status,
@@ -27,7 +28,8 @@ export async function Login(Email, Password) {
             privateKey: privateKey,
             roles: response.data.roles,
             token: response.data.token,
-            stringData: response.data
+            stringData: response.data,
+            username: response.data.userName,
         }
     }
     //we catch errors

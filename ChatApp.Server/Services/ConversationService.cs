@@ -91,7 +91,7 @@ namespace ChatApp.Server.Services
 
             foreach (var a in conversations)
             {
-                var lastMessage = await _messageService.GetLastConvoMessage(a.Id);
+                var lastMessage = await _messageService.GetLastConvoMessage(a.Id, user);
                 var users = a.Users.Select(u => new GetUserConvosDto.ConvoUser
                 {
                     UserName = u.UserName,

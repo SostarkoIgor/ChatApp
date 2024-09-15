@@ -8,7 +8,7 @@ import { decryptMessage } from '../services/AuthAndKeyService'
 
 export default function ConvoList() {
 
-    const { privateKey, userKeys, setPrivateKey, conversations, setConversations, selectedConvo, setSelectedConvo, addUserKey, addPublicKeyIfNotPresent } = useContext(AppContext)
+    const { privateKey, userKeys, setPrivateKey, conversations, setConversations, selectedConvo, setSelectedConvo, addUserKey, addPublicKeyIfNotPresent, username } = useContext(AppContext)
 
     const formatDate = (date) => {
             const messageDate = new Date(date);
@@ -40,7 +40,11 @@ export default function ConvoList() {
             } else {
                 return dateString;
             }
-}
+    	}
+
+    const displayName=(users)=>{
+        return users.filter(user=>user.userName!==username).map(user=>user.userName).join(', ')
+    }
 
     useEffect(() => {
         async function start() {
@@ -75,7 +79,7 @@ export default function ConvoList() {
                                 <div className={userStyles.profilePic}>
                                     <img src="https://picsum.photos/200/300" alt="Placeholder Image" />
                                 </div>
-                                <div className={userStyles.username}>{conversation.otherConvoUsers[0].userName}</div>
+                                <div className={userStyles.username}>{displayName(conversation.otherConvoUsers)}</div>
                             </div>
                             <div className={userStyles.userGroup}>
                                 <div className={userStyles.lastMessage}>

@@ -8,6 +8,8 @@ export const Context = ({ children }) => {
     const [roles, setRoles] = useState(null)
     const [email, setEmail] = useState(null)
 
+    const [username, setUsername] = useState(null)
+
     const [userKeys, setUserKeys] = useState({})
     const [conversations, setConversations] = useState([])
 
@@ -31,6 +33,7 @@ export const Context = ({ children }) => {
         setUserKeys({})
         setConversations([])
         setSelectedConvo(null)
+        setUsername(null)
     }
     
     const addPublicKeyIfNotPresent = async (user, key) => {
@@ -43,7 +46,7 @@ export const Context = ({ children }) => {
         <AppContext.Provider
         value={{ privateKey, setPrivateKey, roles, setRoles, email, setEmail, userKeys,
         setUserKeys, addUserKey, conversations, setConversations, addConversation,
-        selectedConvo, setSelectedConvo, reset, addPublicKeyIfNotPresent }}>
+        selectedConvo, setSelectedConvo, reset, addPublicKeyIfNotPresent, username, setUsername }}>
             {children}
         </AppContext.Provider>
     )

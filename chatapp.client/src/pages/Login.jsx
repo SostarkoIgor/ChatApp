@@ -24,6 +24,7 @@ export default function Login() {
         e.preventDefault()
         let response = await login(email, password)
         if (response.success) {
+            console.log(response)
             //we store token, private key and iv and salt to cookie
             //since we keep decrypted private key in ram, with each refresh it will be deleted
             //so we can read encrypted key from cookie and decrypt it
@@ -31,6 +32,7 @@ export default function Login() {
             appContext.setPrivateKey(response.privateKey)
             appContext.setEmail(response.email)
             appContext.setRoles(response.roles)
+            appContext.setUsername(response.username)
             console.log(response)
             navigate('/')
         }
