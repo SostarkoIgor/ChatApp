@@ -39,3 +39,22 @@ export async function startConvo(userName) {
         }
     }
 }
+
+export async function sendMessageToConvo(message) {
+    try{
+        let response = await axios.post(source + '/api/Message', message, {
+            headers: {
+                Authorization: 'Bearer ' + getToken()
+            }
+        })
+        return {
+            success: true,
+            convoId: response.data
+        }
+    }
+    catch(error){
+        return {
+            success: false
+        }
+    }
+}

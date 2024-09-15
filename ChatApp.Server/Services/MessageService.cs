@@ -23,7 +23,7 @@ namespace ChatApp.Server.Services
 
         public async Task<bool> PostMessageToConversationAsync(PostMessageToConversation postMessageToConversation, ChatUser? sender, Conversation? conversation)
         {
-            if (sender == null || postMessageToConversation.EachUserData == null) { return false; }
+            if (sender == null || postMessageToConversation.ReceiverUsername == null) { return false; }
 
             
             if (conversation == null)
@@ -33,15 +33,13 @@ namespace ChatApp.Server.Services
 
             try
             {
-                foreach (var msgForUser in postMessageToConversation.EachUserData)
-                {
                     await _appDbContext.Messages.AddAsync(new Message()
                     {
                         Conversation = conversation,
                         Sender = sender,
-                        Text = msgForUser.TextCrypted
+                        Text = postMessageToConversation.TextCrypted,
+                        EncryptedFor = await _appDbContext.ChatUsers.Where(a=>a.UserName==postMessageToConversation.ReceiverUsername).FirstOrDefaultAsync()
                     });
-                }
                 await _appDbContext.SaveChangesAsync();
                 return true;
             }

@@ -13,13 +13,16 @@ export const Context = ({ children }) => {
 
     const [selectedConvo, setSelectedConvo] = useState(null)
 
-    const addUserKey = (key) => {
-        setUserKeys({ ...userKeys, [key]: true })
+    const addUserKey = (key, user) => {
+        if (!userKeys[user]) 
+            setUserKeys({ ...userKeys, [user]: key })
     }
 
     const addConversation = (conversation_) => {
         setConversations([...conversations, conversation_])
     }
+
+
 
     const reset= ()=> {
         setPrivateKey(null)
@@ -30,9 +33,9 @@ export const Context = ({ children }) => {
         setSelectedConvo(null)
     }
     
-    const addPublicKeyIfNotPresent = (user, key) => {
+    const addPublicKeyIfNotPresent = async (user, key) => {
         if (!userKeys[user]) {
-            userKeys[user]=convertFromBase64ToPublicRSAKey(key)
+            userKeys[user]=await convertFromBase64ToPublicRSAKey(key)
         }
     }
 

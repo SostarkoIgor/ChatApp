@@ -38,8 +38,8 @@ function SearchUsers({closeWindow}) {
             console.log(response)
             addConversation(response.convo)
             setSelectedConvo(response.convo.convoId)
-            addPublicKeyIfNotPresent(response.convo.otherConvoUsers[0].userName, response.convo.otherConvoUsers[0].publicKey)
-            addPublicKeyIfNotPresent(response.convo.otherConvoUsers[1].userName, response.convo.otherConvoUsers[1].publicKey)
+            await addPublicKeyIfNotPresent(response.convo.otherConvoUsers[0].userName, response.convo.otherConvoUsers[0].publicKey)
+            await addPublicKeyIfNotPresent(response.convo.otherConvoUsers[1].userName, response.convo.otherConvoUsers[1].publicKey)
             console.log(conversations)
         }
         closeWindow()

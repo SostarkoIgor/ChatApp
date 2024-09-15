@@ -26,20 +26,25 @@ namespace ChatApp.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostMessageToConversation([FromBody] PostMessageToConversation postMessage)
+        public async Task<ActionResult<int>> PostMessageToConversation([FromBody] PostMessageToConversation postMessage)
         {
-            if (postMessage == null || postMessage.EachUserData == null)
+            if (postMessage == null || postMessage.ReceiverUsername == null)
             {
                 return BadRequest("No given data!");
             }
             try
             {
                 ChatUser? currentLoggedInUser = (await _userManager.GetUserAsync(User));
-                var users=postMessage.EachUserData.Select(a=>a.ReceiverUsername).ToList();
+                List<string?>? users=new ();
                 users.Add(currentLoggedInUser?.UserName);
-                await _conversationService.CreateConversationIfDoesNotExistAsync(users, postMessage.ConvoId);
-                await _messageService.PostMessageToConversationAsync(postMessage, currentLoggedInUser, await _conversationService.GetConversationByIdAsync(postMessage.ConvoId));
-                return Created();
+                users.Add(postMessage.ReceiverUsername);
+                int convoId=await _conversationService.CreateConversationIfDoesNotExistAsync(users, postMessage.ConvoId);
+                if (convoId == -1)
+                {
+                    return BadRequest();
+                }
+                await _messageService.PostMessageToConversationAsync(postMessage, currentLoggedInUser, await _conversationService.GetConversationByIdAsync(convoId));
+                return Ok(convoId);
             }
             catch (Exception ex)
             {

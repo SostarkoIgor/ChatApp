@@ -268,3 +268,37 @@ export async function convertFromBase64ToPublicRSAKey(keyBase64){
         ['encrypt']
     )
 }
+
+export async function encryptMessage(key, message) {
+
+    console.log(key, message)
+    const encoder = new TextEncoder()
+
+    const encryptedData = await window.crypto.subtle.encrypt(
+        {
+            name: 'RSA-OAEP'
+        },
+        key,
+        encoder.encode(message)
+    )
+
+    return window.btoa(String.fromCharCode(...new Uint8Array(encryptedData)))
+
+}
+
+export async function decryptMessage(key, encryptedMessage) {
+    const encoder = new TextEncoder()
+
+    const encryptedData = base64ToUint8Array(encryptedMessage)
+
+    const decryptedData = await window.crypto.subtle.decrypt(
+        {
+            name: 'RSA-OAEP'
+        },
+        key,
+        encryptedData
+    )
+
+    return encoder.decode(decryptedData)
+
+}

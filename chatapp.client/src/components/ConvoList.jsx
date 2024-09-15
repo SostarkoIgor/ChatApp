@@ -7,20 +7,25 @@ import { getConversations } from '../services/ConvoService'
 
 export default function ConvoList() {
 
-    const { privateKey, userKeys, setPrivateKey, conversations, setConversations, selectedConvo, setSelectedConvo } = useContext(AppContext)
+    const { privateKey, userKeys, setPrivateKey, conversations, setConversations, selectedConvo, setSelectedConvo, addUserKey } = useContext(AppContext)
 
 
     useEffect(() => {
         async function start() {
             if (conversations.length == 0){
                 const response = await getConversations()
-                if (response.success)
+                if (response.success){
                     setConversations(response.conversations)
+                    for (let i = 0; i < response.conversations.length; i++) {
+                        addUserKey(response.conversations[i].otherConvoUsers[0].publicKey ,response.conversations[i].otherConvoUsers[0].userName)
+                    }
+                }
             }
         }
 
         start()
     }, [])
+
 
 
     return (

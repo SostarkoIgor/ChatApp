@@ -4,8 +4,8 @@
     gap: 0.5rem;
     padding: 0.5rem;
     background-color: var(--bg-color1);
-    min-height: 100vh;
-    min-width: 260px;
-    width: 20%;
+    height: 95vh;
+    min-width: 320px;
+    width: 30%;
     color: var(--txt-color1);
 }

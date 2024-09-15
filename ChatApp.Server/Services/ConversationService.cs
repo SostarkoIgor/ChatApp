@@ -26,9 +26,10 @@ namespace ChatApp.Server.Services
             { return true; }
             return false;
         }
-        public async Task CreateConversationIfDoesNotExistAsync(List<string?>? usersNames, int? convoId)
+        public async Task<int> CreateConversationIfDoesNotExistAsync(List<string?>? usersNames, int? convoId)
         {
-            if (usersNames == null || convoId==null || ConversationExists(convoId)) return;
+            if (usersNames == null || convoId==null) return -1;
+            if (ConversationExists(convoId)) return (int)convoId;
             List<ChatUser> users = new();
             foreach (var userName in usersNames)
             {
@@ -39,14 +40,16 @@ namespace ChatApp.Server.Services
             }
             if (users.Count >= 2)
             {
-                await _appDbContext.Conversations.AddAsync(new Conversation()
+                var convo = new Conversation()
                 {
                     Users = users,
                     Messages = new List<Message>()
-                });
+                };
+                await _appDbContext.Conversations.AddAsync(convo);
                 await _appDbContext.SaveChangesAsync();
+                return convo.Id;
             }
-            else return;
+            else return -1;
         }
 
         public async Task<Conversation?> GetConversationByIdAsync(int? conversationId)
