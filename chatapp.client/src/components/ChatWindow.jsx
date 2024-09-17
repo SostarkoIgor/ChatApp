@@ -8,7 +8,7 @@ import { sendMessageToConvo } from '../services/ConvoService'
 function ChatWindow() {
     const { privateKey, userKeys, setPrivateKey, conversations, 
         setConversations, selectedConvo, setSelectedConvo, addUserKey,
-
+        username
     } = useContext(AppContext)
 
     const [message, setMessage] = useState('')
@@ -40,10 +40,20 @@ function ChatWindow() {
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>Chat</div>
+            <div className={styles.header}>
+                {conversations.find(x => x.convoId == selectedConvo).otherConvoUsers.filter(user => user.userName != username).map(user => user.userName)}
+            </div>
             <div className={styles.body}>
-                <input type="text" className={styles.input} onChange={(e) => setMessage(e.target.value)}/>
-                <button className={styles.button} onClick={sendMessage}>Send</button>
+                <div className={styles.messages}>
+
+                </div>
+           
+                <div className={styles.footer}>
+                    <input type="text" className={styles.input} onChange={(e) => setMessage(e.target.value)}/>
+                    <button className={`${styles.button} labelWithIcon`} onClick={sendMessage}>
+                        <span className={`material-symbols-outlined`}>send</span>
+                    </button>
+                </div>
             </div>
         </div>
     )

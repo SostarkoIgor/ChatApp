@@ -34,3 +34,7 @@
 .username{
     font-size: 1rem;
 }
+
+.selected{
+    outline: 2px solid var(--txt-color1);
+}

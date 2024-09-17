@@ -28,6 +28,8 @@ body{
 
     --txt-dark-color1: #101010;
     --txt-dark-color2: #232323d4;
+
+    min-height: 100vh;
 }
 
 .labelWithIcon{

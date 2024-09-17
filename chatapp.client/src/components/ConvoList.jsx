@@ -50,10 +50,8 @@ export default function ConvoList() {
         async function start() {
             if (conversations.length == 0){
                 const response = await getConversations()
-                console.log(response)
                 if (response.success){
                     for (let i = 0; i < response.conversations.length; i++) {
-                        console.log(response.conversations[i].otherConvoUsers[0].publicKey)
                         for (let j = 0; j < response.conversations[i].otherConvoUsers.length; j++)
                             await addPublicKeyIfNotPresent(response.conversations[i].otherConvoUsers[j].userName, response.conversations[i].otherConvoUsers[j].publicKey)
                         response.conversations[i].lastMessage.message = await decryptMessage(privateKey, response.conversations[i].lastMessage.messageCrypted)
@@ -74,7 +72,7 @@ export default function ConvoList() {
             <div className={styles.conversations}>
                 {conversations.map((conversation, index) => {
                     return (
-                        <div className={userStyles.user} key={index} onClick={() => setSelectedConvo(conversation.convoId)}>
+                        <div className={`${userStyles.user} ${selectedConvo === conversation.convoId ? userStyles.selected : ''}`} key={index} onClick={() => setSelectedConvo(conversation.convoId)}>
                             <div className={userStyles.userGroup}>
                                 <div className={userStyles.profilePic}>
                                     <img src="https://picsum.photos/200/300" alt="Placeholder Image" />
