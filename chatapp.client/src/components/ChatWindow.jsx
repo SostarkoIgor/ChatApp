@@ -5,10 +5,26 @@ import styles from '../styles/chatWindow.module.css'
 import { useState } from 'react'
 import { sendMessageToConvo } from '../services/ConvoService'
 
+function formatDate(date) {
+    const messageDate = new Date(date);
+    const now = new Date();
+    const timeString = messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const monthAndTimeWithoutYear = messageDate.toLocaleDateString('default', { month: 'numeric', day: 'numeric' }) + ' ' + timeString;
+    const dateString = messageDate.toLocaleDateString();
+    if (messageDate.getDate() === now.getDate() && messageDate.getMonth() === now.getMonth() && messageDate.getFullYear() === now.getFullYear()) {
+        return timeString; // Format: 14:57
+    } else if (messageDate.getFullYear()===now.getFullYear()) {
+        return monthAndTimeWithoutYear;
+    }
+    else {
+        return dateString;
+    }
+}
+
 function ChatWindow() {
     const { privateKey, userKeys, setPrivateKey, conversations, 
         setConversations, selectedConvo, setSelectedConvo, addUserKey,
-        username
+        username, convoMessages, setConvoMessages, addMessageToConvo, addConvo 
     } = useContext(AppContext)
 
     const [message, setMessage] = useState('')
@@ -38,14 +54,25 @@ function ChatWindow() {
         console.log(conversations)
     }
 
+    if (selectedConvo === null) {
+        return (<div className={styles.container}></div>)
+    }
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                {conversations.find(x => x.convoId == selectedConvo).otherConvoUsers.filter(user => user.userName != username).map(user => user.userName)}
+                {conversations.find(x => x.convoId == selectedConvo)?.otherConvoUsers.filter(user => user.userName != username).map(user => user.userName)}
             </div>
             <div className={styles.body}>
                 <div className={styles.messages}>
-
+                    {convoMessages[selectedConvo]?.map((message, index) => (
+                        <div className={styles.messageContainer} key={index}>
+                            <div className={`${styles.message} ${message.senderUsername != username ? styles.messageFromOtherUser : styles.messageFromLoggedInUser}`}>
+                                <div className={styles.messageText}> {message.message} </div>
+                                <div className={styles.messageTime}>{formatDate(message.sentAt)}</div>
+                            </div>
+                        </div>
+                        
+                    ))}
                 </div>
            
                 <div className={styles.footer}>

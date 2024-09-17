@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ChatApp.Server.Controllers
 {
@@ -29,12 +30,22 @@ namespace ChatApp.Server.Controllers
         {
             return Ok(await _conversationService.GetUserConvosAsync(await _userManager.GetUserAsync(User)));
         }
-        [HttpGet("{username}")]
+        [HttpGet("start/{username}")]
         public async Task<ActionResult<GetUserConvosDto>> StartConvoWithUser([FromRoute] string username)
         {
             GetUserConvosDto? getUserConvosDto = await _conversationService.GetUserConvoDtoForUserName(username, await _userManager.GetUserAsync(User));
             if (getUserConvosDto == null) { return BadRequest(); }
             return Ok(getUserConvosDto);
+        }
+
+        [HttpGet("messages/{convoId}")]
+        public async Task<ActionResult<List<ConvoMessageDto>>> GetConvoMessages([FromRoute] int convoId)
+        {
+            var convo = await _conversationService.GetConversationByIdAsync(convoId);
+            if (convo == null) { return NotFound(); }
+            var user = await _userManager.GetUserAsync(User);
+            if (!convo.Users.Contains(user)) return Forbid();
+            return Ok(await _conversationService.GetConvoMessagesAsync(convo, user));
         }
 
     }

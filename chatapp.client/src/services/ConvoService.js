@@ -23,7 +23,7 @@ export async function getConversations() {
 
 export async function startConvo(userName) {
     try{
-        let response = await axios.get(source + '/api/Conversations/'+userName, {
+        let response = await axios.get(source + '/api/Conversations/start/'+userName, {
             headers: {
                 Authorization: 'Bearer ' + getToken()
             }
@@ -50,6 +50,25 @@ export async function sendMessageToConvo(message) {
         return {
             success: true,
             convoId: response.data
+        }
+    }
+    catch(error){
+        return {
+            success: false
+        }
+    }
+}
+
+export async function getConvoMessages(convoId) {
+    try{
+        let response = await axios.get(source + '/api/Conversations/messages/'+convoId, {
+            headers: {
+                Authorization: 'Bearer ' + getToken()
+            }
+        })
+        return {
+            success: true,
+            messages: response.data
         }
     }
     catch(error){

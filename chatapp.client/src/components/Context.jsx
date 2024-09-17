@@ -15,6 +15,10 @@ export const Context = ({ children }) => {
 
     const [selectedConvo, setSelectedConvo] = useState(null)
 
+    const [isLoaded, setIsLoaded] = useState(false)
+
+    const [convoMessages, setConvoMessages] = useState([])
+
     const addUserKey = (key, user) => {
         if (!userKeys[user]) 
             setUserKeys({ ...userKeys, [user]: key })
@@ -22,6 +26,14 @@ export const Context = ({ children }) => {
 
     const addConversation = (conversation_) => {
         setConversations([...conversations, conversation_])
+    }
+
+    const addMessageToConvo = (convoId, message) => {
+        setConvoMessages({ ...convoMessages, [convoId]: [...convoMessages[convoId], message] })
+    }
+
+    const addConvo = (convoId, conversation) => {
+        setConvoMessages({ ...convoMessages, [convoId]: conversation })
     }
 
 
@@ -34,6 +46,7 @@ export const Context = ({ children }) => {
         setConversations([])
         setSelectedConvo(null)
         setUsername(null)
+        setIsLoaded(false)
     }
     
     const addPublicKeyIfNotPresent = async (user, key) => {
@@ -46,7 +59,8 @@ export const Context = ({ children }) => {
         <AppContext.Provider
         value={{ privateKey, setPrivateKey, roles, setRoles, email, setEmail, userKeys,
         setUserKeys, addUserKey, conversations, setConversations, addConversation,
-        selectedConvo, setSelectedConvo, reset, addPublicKeyIfNotPresent, username, setUsername }}>
+        selectedConvo, setSelectedConvo, reset, addPublicKeyIfNotPresent, username, setUsername,
+        isLoaded, setIsLoaded, convoMessages, setConvoMessages, addMessageToConvo, addConvo }}>
             {children}
         </AppContext.Provider>
     )

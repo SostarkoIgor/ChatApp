@@ -54,7 +54,22 @@ namespace ChatApp.Server.Services
 
         public async Task<Conversation?> GetConversationByIdAsync(int? conversationId)
         {
-            return await _appDbContext.Conversations.Where(a => a.Id == conversationId).FirstOrDefaultAsync();
+            return await _appDbContext.Conversations.Where(a => a.Id == conversationId).Include(a=>a.Users).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<ConvoMessageDto>> GetConvoMessagesAsync(Conversation conversation, ChatUser chatUser)
+        {
+            return await _appDbContext.Messages.Where(a=>a.ConversationId == conversation.Id && a.EncryptedFor==chatUser)
+                .Include(a=>a.Sender)
+                .Select(a=>new ConvoMessageDto()
+                {
+                    EncryptedMessage=a.Text,
+                    ReceiverUsername=chatUser.UserName,
+                    SenderUsername=a.Sender.UserName,
+                    Id=a.Id,
+                    IsRead=a.IsRead,
+                    SentAt=a.SentAt
+                }).ToListAsync();
         }
 
         public async Task<GetUserConvosDto?> GetUserConvoDtoForUserName(string userName, ChatUser currentUser)
