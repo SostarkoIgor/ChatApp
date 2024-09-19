@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { AppContext } from '../components/Context'
 import { decryptMessage, encryptMessage } from '../services/AuthAndKeyService'
 import styles from '../styles/chatWindow.module.css'
@@ -12,7 +12,7 @@ function formatDate(date) {
     const monthAndTimeWithoutYear = messageDate.toLocaleDateString('default', { month: 'numeric', day: 'numeric' }) + ' ' + timeString;
     const dateString = messageDate.toLocaleDateString();
     if (messageDate.getDate() === now.getDate() && messageDate.getMonth() === now.getMonth() && messageDate.getFullYear() === now.getFullYear()) {
-        return timeString; // Format: 14:57
+        return timeString;
     } else if (messageDate.getFullYear()===now.getFullYear()) {
         return monthAndTimeWithoutYear;
     }
@@ -24,12 +24,13 @@ function formatDate(date) {
 function ChatWindow() {
     const { privateKey, userKeys, setPrivateKey, conversations, 
         setConversations, selectedConvo, setSelectedConvo, addUserKey,
-        username, convoMessages, setConvoMessages, addMessageToConvo, addConvo 
+        username, convoMessages, setConvoMessages, addMessageToConvo, addConvo, sendMessageToConvoSigR
     } = useContext(AppContext)
 
     const [message, setMessage] = useState('')
 
     const sendMessage = async () => {
+        console.log(convoMessages)
         let selectedConvo_ = conversations.find(x => x.convoId == selectedConvo)
         console.log(selectedConvo_)
         console.log(conversations)
@@ -46,8 +47,14 @@ function ChatWindow() {
                 }
             )
             console.log(convoResponse)
-            if (convoResponse.success &&selectedConvo==-1){
+            if (convoResponse.success && selectedConvo==-1){
                 selectedConvo_.convoId = convoResponse.convoId
+            }
+            if (convoResponse.success && selectedConvo_.otherConvoUsers[i].userName != username){
+                sendMessageToConvoSigR(encryptedMessage, convoResponse.convoId, selectedConvo_.otherConvoUsers[i].userName);
+            }
+            if (convoResponse.success){
+                setMessage('')
             }
             
         }

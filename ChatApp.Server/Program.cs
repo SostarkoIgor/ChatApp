@@ -1,5 +1,6 @@
 using ChatApp.Server.Auth;
 using ChatApp.Server.Data;
+using ChatApp.Server.Hubs;
 using ChatApp.Server.Interfaces;
 using ChatApp.Server.Models;
 using ChatApp.Server.Services;
@@ -14,6 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddControllers();
+
+builder.Services.AddSignalR(e => {
+    e.MaximumReceiveMessageSize = 102400000;
+});
 
 builder.Services.AddIdentity<ChatUser, IdentityRole>(options =>
 {
@@ -42,7 +47,8 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins("https://localhost:5173") // Dozvoljeni domen
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
+                  .AllowAnyMethod()
+                  .AllowCredentials();
         });
 });
 
@@ -64,6 +70,21 @@ builder.Services.AddAuthentication(options =>
             ValidAudience = "",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"])),
             ClockSkew = TimeSpan.Zero
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+
+                // Ako je SignalR zahtjev, dodaj token iz query stringa
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hub"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
         };
     });
 
@@ -88,6 +109,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseCors();
+
+app.MapHub<ChatHub>("/hub");
 
 app.MapFallbackToFile("/index.html");
 

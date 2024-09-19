@@ -81,6 +81,7 @@ export default function ConvoList() {
             console.log(convoMessages)
             addConvo(convoId, convoMessages_.messages)
         }
+        console.log(convoMessages)
     }
 
     if (!isLoaded) return null

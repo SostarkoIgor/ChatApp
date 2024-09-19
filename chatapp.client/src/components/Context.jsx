@@ -1,5 +1,7 @@
-import { createContext, useState } from "react"
-import { convertFromBase64ToPublicRSAKey } from '../services/AuthAndKeyService'
+import { createContext, useState, useEffect } from "react"
+import { convertFromBase64ToPublicRSAKey, decryptMessage } from '../services/AuthAndKeyService'
+import { HubConnectionBuilder } from "@microsoft/signalr"
+import { getToken } from "../services/TokenService"
 
 export const AppContext = createContext()
 
@@ -17,7 +19,60 @@ export const Context = ({ children }) => {
 
     const [isLoaded, setIsLoaded] = useState(false)
 
-    const [convoMessages, setConvoMessages] = useState([])
+    const [convoMessages, setConvoMessages] = useState({})
+
+    const [hubConnection, setHubConnection] = useState(null)
+
+    useEffect(() => {  
+        async function start() {  
+            if (isLoaded) {
+                const newHubConnection = new HubConnectionBuilder().withUrl("https://localhost:7109/hub",
+                    {
+                        accessTokenFactory: () => getToken(),
+                    }
+                ).build()
+                newHubConnection.serverTimeoutInMilliseconds = 1000 * 60 * 2;
+                newHubConnection.keepAliveIntervalInMilliseconds = 1000 * 30;
+                newHubConnection.start()
+                    .then(() => console.log('Connected!'))
+                    .catch(err => console.log('Connection failed: ', err));
+
+                    newHubConnection.on('ReceiveMessage', async (convoId, message) => {
+                        message = await decryptMessage(privateKey, message);
+                        console.log(message, convoId)
+                        console.log("aaaaaaaaaaaaaaaaaaa")
+                        console.log(convoMessages)
+                        addMessageToConvo(convoId, {
+                            message: message,
+                            sentAt: new Date()
+                        });
+
+                });
+
+                setHubConnection(newHubConnection);
+            }
+        }
+        start();
+            return () => {
+                if (hubConnection)
+                    hubConnection.stop();
+            }
+        }
+    , [isLoaded])
+
+    const sendMessageToConvoSigR = async (message, convoId, user) => {
+        console.log("send message", message, convoId, user, hubConnection)
+        if (hubConnection) {
+            try {
+                await hubConnection.invoke('SendMessage', user, {
+                    ConvoId: convoId,
+                    Message: message
+                });
+            } catch (err) {
+                console.error('Error sending message: ', err);
+            }
+        }
+    }
 
     const addUserKey = (key, user) => {
         if (!userKeys[user]) 
@@ -29,11 +84,14 @@ export const Context = ({ children }) => {
     }
 
     const addMessageToConvo = (convoId, message) => {
-        setConvoMessages({ ...convoMessages, [convoId]: [...convoMessages[convoId], message] })
+        console.log(convoMessages)
+        setConvoMessages( convoMessages => ({ ...convoMessages, [convoId]: [...convoMessages[convoId], message] }));
+        console.log(convoMessages)
+        console.log(convoId, message)	
     }
 
     const addConvo = (convoId, conversation) => {
-        setConvoMessages({ ...convoMessages, [convoId]: conversation })
+        setConvoMessages( convoMessages => ({ ...convoMessages, [convoId]: conversation }))
     }
 
 
@@ -60,7 +118,7 @@ export const Context = ({ children }) => {
         value={{ privateKey, setPrivateKey, roles, setRoles, email, setEmail, userKeys,
         setUserKeys, addUserKey, conversations, setConversations, addConversation,
         selectedConvo, setSelectedConvo, reset, addPublicKeyIfNotPresent, username, setUsername,
-        isLoaded, setIsLoaded, convoMessages, setConvoMessages, addMessageToConvo, addConvo }}>
+        isLoaded, setIsLoaded, convoMessages, setConvoMessages, addMessageToConvo, addConvo, sendMessageToConvoSigR }}>
             {children}
         </AppContext.Provider>
     )
