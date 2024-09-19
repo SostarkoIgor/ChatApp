@@ -26,7 +26,7 @@ namespace ChatApp.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> PostMessageToConversation([FromBody] PostMessageToConversation postMessage)
+        public async Task<ActionResult<ConvoMessageDto>> PostMessageToConversation([FromBody] PostMessageToConversation postMessage)
         {
             if (postMessage == null || postMessage.ReceiverUsername == null)
             {
@@ -43,8 +43,19 @@ namespace ChatApp.Server.Controllers
                 {
                     return BadRequest();
                 }
-                await _messageService.PostMessageToConversationAsync(postMessage, currentLoggedInUser, await _conversationService.GetConversationByIdAsync(convoId));
-                return Ok(convoId);
+                var rez=await _messageService.PostMessageToConversationAsync(postMessage, currentLoggedInUser, await _conversationService.GetConversationByIdAsync(convoId));
+                if (rez == null) { BadRequest(); }
+
+                return Ok(new ConvoMessageDto()
+                {
+                    EncryptedMessage=rez.Text,
+                    Id=rez.Id,
+                    ConvoId=convoId,
+                    IsRead=rez.IsRead,
+                    ReceiverUsername=postMessage.ReceiverUsername,
+                    SenderUsername=rez.Sender.UserName,
+                    SentAt=rez.SentAt
+                });
             }
             catch (Exception ex)
             {

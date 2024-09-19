@@ -49,7 +49,8 @@ export async function sendMessageToConvo(message) {
         })
         return {
             success: true,
-            convoId: response.data
+            convoId: response.data.convoId,
+            message: response.data
         }
     }
     catch(error){

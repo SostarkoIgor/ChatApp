@@ -1,17 +1,13 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using ChatApp.Server.Dtos;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ChatApp.Server.Hubs
 {
     public class ChatHub : Hub
     {
-        public class SimpleMessage
+        public async Task SendMessage(string user, ConvoMessageDto message)
         {
-            public int ConvoId { get; set; }
-            public string Message { get; set; }
-        }
-        public async Task SendMessage(string user, SimpleMessage message)
-        {
-            await Clients.Group(user).SendAsync("ReceiveMessage", message.ConvoId, message.Message);
+            await Clients.Group(user).SendAsync("ReceiveMessage", message.ConvoId, message);
         }
         public override async Task OnConnectedAsync()
         {

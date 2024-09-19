@@ -67,6 +67,7 @@ namespace ChatApp.Server.Services
                     ReceiverUsername=chatUser.UserName,
                     SenderUsername=a.Sender.UserName,
                     Id=a.Id,
+                    ConvoId=conversation.Id,
                     IsRead=a.IsRead,
                     SentAt=a.SentAt
                 }).ToListAsync();

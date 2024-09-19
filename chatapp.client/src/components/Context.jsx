@@ -38,14 +38,9 @@ export const Context = ({ children }) => {
                     .catch(err => console.log('Connection failed: ', err));
 
                     newHubConnection.on('ReceiveMessage', async (convoId, message) => {
-                        message = await decryptMessage(privateKey, message);
-                        console.log(message, convoId)
-                        console.log("aaaaaaaaaaaaaaaaaaa")
-                        console.log(convoMessages)
-                        addMessageToConvo(convoId, {
-                            message: message,
-                            sentAt: new Date()
-                        });
+                        console.log(convoId, message)
+                        message.message = await decryptMessage(privateKey, message.encryptedMessage);
+                        addMessageToConvo(convoId, message);
 
                 });
 
@@ -60,14 +55,11 @@ export const Context = ({ children }) => {
         }
     , [isLoaded])
 
-    const sendMessageToConvoSigR = async (message, convoId, user) => {
-        console.log("send message", message, convoId, user, hubConnection)
+    const sendMessageToConvoSigR = async (message, user) => {
+        console.log("send message", message, user, hubConnection)
         if (hubConnection) {
             try {
-                await hubConnection.invoke('SendMessage', user, {
-                    ConvoId: convoId,
-                    Message: message
-                });
+                await hubConnection.invoke('SendMessage', user, message);
             } catch (err) {
                 console.error('Error sending message: ', err);
             }

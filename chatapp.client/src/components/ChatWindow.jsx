@@ -51,7 +51,8 @@ function ChatWindow() {
                 selectedConvo_.convoId = convoResponse.convoId
             }
             if (convoResponse.success && selectedConvo_.otherConvoUsers[i].userName != username){
-                sendMessageToConvoSigR(encryptedMessage, convoResponse.convoId, selectedConvo_.otherConvoUsers[i].userName);
+                console.log(convoResponse.message, selectedConvo_.otherConvoUsers[i].userName)
+                sendMessageToConvoSigR(convoResponse.message, selectedConvo_.otherConvoUsers[i].userName);
             }
             if (convoResponse.success){
                 setMessage('')

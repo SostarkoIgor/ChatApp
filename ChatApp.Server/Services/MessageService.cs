@@ -21,31 +21,32 @@ namespace ChatApp.Server.Services
                 .FirstOrDefaultAsync());
         }
 
-        public async Task<bool> PostMessageToConversationAsync(PostMessageToConversation postMessageToConversation, ChatUser? sender, Conversation? conversation)
+        public async Task<Message?> PostMessageToConversationAsync(PostMessageToConversation postMessageToConversation, ChatUser? sender, Conversation? conversation)
         {
-            if (sender == null || postMessageToConversation.ReceiverUsername == null) { return false; }
+            if (sender == null || postMessageToConversation.ReceiverUsername == null) { return null; }
 
             
             if (conversation == null)
             {
-                return false;
+                return null;
             }
 
             try
             {
-                    await _appDbContext.Messages.AddAsync(new Message()
-                    {
-                        Conversation = conversation,
-                        Sender = sender,
-                        Text = postMessageToConversation.TextCrypted,
-                        EncryptedFor = await _appDbContext.ChatUsers.Where(a=>a.UserName==postMessageToConversation.ReceiverUsername).FirstOrDefaultAsync()
-                    });
+                var msg = new Message()
+                {
+                    Conversation = conversation,
+                    Sender = sender,
+                    Text = postMessageToConversation.TextCrypted,
+                    EncryptedFor = await _appDbContext.ChatUsers.Where(a => a.UserName == postMessageToConversation.ReceiverUsername).FirstOrDefaultAsync()
+                };
+                await _appDbContext.Messages.AddAsync(msg);
                 await _appDbContext.SaveChangesAsync();
-                return true;
+                return msg;
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
 
         }
