@@ -6,42 +6,51 @@ import { getConversations, getConvoMessages } from '../services/ConvoService'
 import { decryptMessage } from '../services/AuthAndKeyService'
 
 const formatDate = (date) => {
-    const messageDate = new Date(date);
-    const now = new Date();
+    const messageDate = new Date(date); // Convert input to a Date object (local time)
+    const now = new Date(); // Current date in local time
 
-    
+    // Helper function to check if the given date is today
     const isToday = (someDate) => {
         return someDate.getDate() === now.getDate() &&
             someDate.getMonth() === now.getMonth() &&
             someDate.getFullYear() === now.getFullYear();
     };
 
+    // Helper function to check if the given date is yesterday
     const isYesterday = (someDate) => {
-        const yesterday = new Date(now);
-        yesterday.setDate(now.getDate() - 1);
+        const yesterday = new Date(now); // Clone current date
+        yesterday.setDate(now.getDate() - 1); // Move date back by one day
         return someDate.getDate() === yesterday.getDate() &&
             someDate.getMonth() === yesterday.getMonth() &&
             someDate.getFullYear() === yesterday.getFullYear();
     };
 
-    
+    // Format the time (HH:mm) for the local time zone
     const timeString = messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    // Format the full date (with year, month, and day)
     const dateString = messageDate.toLocaleDateString();
 
+    // Check if the date is today
     if (isToday(messageDate)) {
-        return timeString; // Format: 14:57
-    } else if (isYesterday(messageDate)) {
-        return "Yesterday";
-    } else {
-        return dateString;
+        return timeString; // Return only the time (e.g., "14:57")
+    } 
+    // Check if the date is yesterday
+    else if (isYesterday(messageDate)) {
+        return "Yesterday"; // Return "Yesterday" if the date matches yesterday
+    } 
+    // If the date is neither today nor yesterday, return the full date
+    else {
+        return dateString; // Return the formatted date (e.g., "9/19/2024")
     }
-}
+};
+
 
 export default function ConvoList() {
 
     const { privateKey, userKeys, setPrivateKey, conversations, setConversations, selectedConvo,
         setSelectedConvo, addUserKey, addPublicKeyIfNotPresent, username, isLoaded, setIsLoaded,
-        convoMessages, setConvoMessages, addMessageToConvo, addConvo  } = useContext(AppContext)
+        convoMessages, setConvoMessages, addMessageToConvo, addConvo, changeLastMessage  } = useContext(AppContext)
 
     
     const displayName=(users)=>{
@@ -57,8 +66,10 @@ export default function ConvoList() {
                         for (let j = 0; j < response.conversations[i].otherConvoUsers.length; j++)
                             await addPublicKeyIfNotPresent(response.conversations[i].otherConvoUsers[j].userName, response.conversations[i].otherConvoUsers[j].publicKey)
                         response.conversations[i].lastMessage.message = await decryptMessage(privateKey, response.conversations[i].lastMessage.messageCrypted)
+                        
                     }
                     setConversations(response.conversations)
+                    console.log(response.conversations)
                     setIsLoaded(true)
                 }
             }

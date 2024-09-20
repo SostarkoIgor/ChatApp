@@ -41,6 +41,12 @@ export const Context = ({ children }) => {
                         console.log(convoId, message)
                         message.message = await decryptMessage(privateKey, message.encryptedMessage);
                         addMessageToConvo(convoId, message);
+                        changeLastMessage(convoId, {
+                            message: message.message,
+                            messageCrypted: message.encryptedMessage,
+                            messageRead: message.isRead,
+                            messageSentAt: message.sentAt
+                        });
 
                 });
 
@@ -75,15 +81,29 @@ export const Context = ({ children }) => {
         setConversations([...conversations, conversation_])
     }
 
+    const changeLastMessage = (convoId, newLastMessage) => {
+        setConversations(prevConversations =>
+            prevConversations.map(convo => {
+              if (convo.convoId === convoId) {
+                return {
+                  ...convo,
+                  lastMessage: {
+                    ...convo.lastMessage,  // Spread the old lastMessage object to retain unchanged fields
+                    ...newLastMessage      // Override fields in lastMessage with the new data
+                  }
+                };
+              }
+              return convo; // If convoId doesn't match, return the convo unchanged
+            })
+          );
+    }
+
     const addMessageToConvo = (convoId, message) => {
-        console.log(convoMessages)
-        setConvoMessages( convoMessages => ({ ...convoMessages, [convoId]: [...convoMessages[convoId], message] }));
-        console.log(convoMessages)
-        console.log(convoId, message)	
+        setConvoMessages(convoMessages => ({ ...convoMessages, [convoId]: [...convoMessages[convoId], message] }));
     }
 
     const addConvo = (convoId, conversation) => {
-        setConvoMessages( convoMessages => ({ ...convoMessages, [convoId]: conversation }))
+        setConvoMessages(convoMessages => ({ ...convoMessages, [convoId]: conversation }))
     }
 
 
@@ -110,7 +130,8 @@ export const Context = ({ children }) => {
         value={{ privateKey, setPrivateKey, roles, setRoles, email, setEmail, userKeys,
         setUserKeys, addUserKey, conversations, setConversations, addConversation,
         selectedConvo, setSelectedConvo, reset, addPublicKeyIfNotPresent, username, setUsername,
-        isLoaded, setIsLoaded, convoMessages, setConvoMessages, addMessageToConvo, addConvo, sendMessageToConvoSigR }}>
+        isLoaded, setIsLoaded, convoMessages, setConvoMessages, addMessageToConvo, addConvo, sendMessageToConvoSigR,
+        changeLastMessage }}>
             {children}
         </AppContext.Provider>
     )
