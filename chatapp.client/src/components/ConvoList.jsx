@@ -101,6 +101,7 @@ export default function ConvoList() {
             {/* <div className={styles.title}>Conversations</div> */}
             <div className={styles.conversations}>
                 {conversations.map((conversation, index) => {
+                    if (conversation==null) return <></>
                     return (
                         <div className={`${userStyles.user} ${selectedConvo === conversation.convoId ? userStyles.selected : ''}`} key={index} onClick={()=>selectUserFromList(conversation.convoId)}>
                             <div className={userStyles.userGroup}>
@@ -111,13 +112,21 @@ export default function ConvoList() {
                             </div>
                             <div className={userStyles.userGroup}>
                                 <div className={userStyles.lastMessage}>
-                                {conversation.lastMessage.message.length > 10 
-                                ? conversation.lastMessage.message.substring(0, 7) + "..." 
-                                : conversation.lastMessage.message}
+                                {conversation.lastMessage && conversation.lastMessage.message ?
+                                    <>
+                                    {conversation.lastMessage.message.length > 10 
+                                    ? conversation.lastMessage.message.substring(0, 7) + "..." 
+                                    : conversation.lastMessage.message}
+                                    </>
+                                    :<></>
+                                }
                                 </div>
                             </div>
                             <div className={styles.sentAt}>
-                                {formatDate(conversation.lastMessage.messageSentAt)}
+                            {conversation.lastMessage && conversation.lastMessage.message ?
+                                <>{formatDate(conversation.lastMessage.messageSentAt)}</>
+                                :<></>
+                            }
                             </div>
                         </div>
                     )

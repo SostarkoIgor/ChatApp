@@ -27,7 +27,6 @@ function SearchUsers({closeWindow}) {
             const userNames = convo.otherConvoUsers.map(user => user.userName);
             return userNames.includes(user) && userNames.length === 2;
         })
-        console.log(convo)
         if (convo !== undefined) {
             setSelectedConvo(convo.convoId)
             closeWindow()

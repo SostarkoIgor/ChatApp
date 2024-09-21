@@ -40,7 +40,24 @@ export const Context = ({ children }) => {
                     newHubConnection.on('ReceiveMessage', async (convoId, message) => {
                         console.log(convoId, message)
                         message.message = await decryptMessage(privateKey, message.encryptedMessage);
-                        addMessageToConvo(convoId, message);
+                        if (conversations.find(x => x.convoId == convoId) == undefined){
+                            addConversation({
+                                convoId: convoId,
+                                otherConvoUsers: [
+                                    message.senderUsername,
+                                    message.receiverUsername
+                                ],
+                                lastMessage: {
+                                    message: message.message,
+                                    messageCrypted: message.encryptedMessage,
+                                    messageRead: message.isRead,
+                                    messageSentAt: message.sentAt
+                                }
+                            })
+                            addConvo(convoId, [message]);
+                        }
+                        if (convoMessages[convoId] !== undefined)
+                            addMessageToConvo(convoId, message);
                         changeLastMessage(convoId, {
                             message: message.message,
                             messageCrypted: message.encryptedMessage,
@@ -99,7 +116,11 @@ export const Context = ({ children }) => {
     }
 
     const addMessageToConvo = (convoId, message) => {
-        setConvoMessages(convoMessages => ({ ...convoMessages, [convoId]: [...convoMessages[convoId], message] }));
+        console.log(convoMessages)
+        if (convoMessages[convoId] !== undefined)
+            setConvoMessages(convoMessages => ({ ...convoMessages, [convoId]: [...convoMessages[convoId], message] }))
+        else
+            setConvoMessages(convoMessages => ({ ...convoMessages, [convoId]: [message] }))
     }
 
     const addConvo = (convoId, conversation) => {

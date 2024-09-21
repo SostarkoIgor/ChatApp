@@ -52,11 +52,15 @@ function ChatWindow() {
 
     const chatRef = useRef(null)
     
-    useEffect(() => {
-        if (convoMessages[selectedConvo] && chatRef.current) {
+    const scrollToBottom = () => {
+        if (chatRef.current) {
           chatRef.current.scrollTop = chatRef.current.scrollHeight;
         }
-      }, [convoMessages]);
+    }
+
+    useEffect(() => {
+        scrollToBottom()
+      }, [convoMessages, selectedConvo])
 
     const sendMessage = async () => {
         if (message === '') return
@@ -82,6 +86,9 @@ function ChatWindow() {
             }
             if (convoResponse.success && selectedConvo_.otherConvoUsers[i].userName == username){
                 convoResponse.message.message=message
+                console.log(selectedConvo)
+                console.log(selectedConvo_)
+                //addMessageToConvo(convoResponse.convoId, convoResponse.message);
                 addMessageToConvo(selectedConvo, convoResponse.message);
             }
             if (convoResponse.success){
