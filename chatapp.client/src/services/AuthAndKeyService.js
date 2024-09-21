@@ -304,3 +304,14 @@ export async function decryptMessage(key, encryptedMessage) {
     return decoder.decode(decryptedData)
 
 }
+
+export async function fetchUserKey(userName){
+
+    const response = await axios.get(source + '/api/User/getUserKey?userName='+userName, {
+        headers: {
+            Authorization: 'Bearer ' + getToken()
+        }
+    })
+    console.log(response.data)
+    return convertFromBase64ToPublicRSAKey(response.data)
+}

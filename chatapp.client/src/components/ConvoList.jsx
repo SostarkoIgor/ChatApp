@@ -75,7 +75,8 @@ export default function ConvoList() {
             }
         }
 
-        start()
+        
+            start()
     }, [])
 
 

@@ -27,13 +27,19 @@ namespace ChatApp.Server.Controllers
 
         }
 
-        [HttpGet("{userName}")]
+        [HttpGet("getUserData/{userName}")]
         public async Task<ActionResult<UserDataDto>> GetUserData([FromRoute] string? userName)
         {
             if (userName == null) { return NotFound(); }
             UserDataDto userData= await _userService.GetUserDataAsync(userName);
             if (userName == null) return NotFound();
             return Ok(userData);
+        }
+        [HttpGet("getUserKey")]
+        public async Task<ActionResult<string>> GetUserPublicKeyAsync([FromQuery] string? userName)
+        {
+            if (userName == null) { return BadRequest(); }
+            return Ok(await _userService.GetPublicKeyOfUserAsync(userName));
         }
     }
 }

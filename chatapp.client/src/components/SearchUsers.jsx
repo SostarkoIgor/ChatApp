@@ -6,7 +6,7 @@ import { startConvo } from '../services/ConvoService'
 import { AppContext } from '../components/Context'
 
 function SearchUsers({closeWindow}) {
-    const {conversations, addConversation, selectedConvo, setSelectedConvo, addPublicKeyIfNotPresent} = useContext(AppContext)
+    const {conversations, addConversation, selectedConvo, setSelectedConvo, addPublicKeyIfNotPresent, deleteConvoMessages} = useContext(AppContext)
     const [searchValue, setSearchValue] = useState('')
     const [users, setUsers] = useState([])
     const [message, setMessage] = useState('')
@@ -35,6 +35,7 @@ function SearchUsers({closeWindow}) {
         let response = await startConvo(user)
         if (response.success) {
             console.log(response)
+            deleteConvoMessages(-1)
             addConversation(response.convo)
             setSelectedConvo(response.convo.convoId)
             await addPublicKeyIfNotPresent(response.convo.otherConvoUsers[0].userName, response.convo.otherConvoUsers[0].publicKey)

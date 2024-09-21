@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react'
 import { AppContext } from '../components/Context'
-import { decryptMessage, encryptMessage } from '../services/AuthAndKeyService'
+import { decryptMessage, encryptMessage, fetchUserKey } from '../services/AuthAndKeyService'
 import styles from '../styles/chatWindow.module.css'
 import { useState, useRef } from 'react'
 import { sendMessageToConvo } from '../services/ConvoService'
@@ -65,10 +65,14 @@ function ChatWindow() {
     const sendMessage = async () => {
         if (message === '') return
         let selectedConvo_ = conversations.find(x => x.convoId == selectedConvo)
+        console.log(selectedConvo_)
     
 
         for (let i = 0; i < selectedConvo_.otherConvoUsers.length; i++){
-            
+            if (userKeys[selectedConvo_.otherConvoUsers[i].userName] === undefined){
+                let key=await fetchUserKey(selectedConvo_.otherConvoUsers[i].userName)
+                userKeys[selectedConvo_.otherConvoUsers[i].userName]=key
+            }
             let encryptedMessage = await encryptMessage(userKeys[selectedConvo_.otherConvoUsers[i].userName], message)
 
             let convoResponse = await sendMessageToConvo(
@@ -82,22 +86,23 @@ function ChatWindow() {
                 selectedConvo_.convoId = convoResponse.convoId
             }
             if (convoResponse.success && selectedConvo_.otherConvoUsers[i].userName != username){
+                console.log(selectedConvo_.otherConvoUsers[i].userName)
                 sendMessageToConvoSigR(convoResponse.message, selectedConvo_.otherConvoUsers[i].userName);
             }
             if (convoResponse.success && selectedConvo_.otherConvoUsers[i].userName == username){
                 convoResponse.message.message=message
                 console.log(selectedConvo)
                 console.log(selectedConvo_)
-                //addMessageToConvo(convoResponse.convoId, convoResponse.message);
-                addMessageToConvo(selectedConvo, convoResponse.message);
-            }
-            if (convoResponse.success){
-                changeLastMessage(selectedConvo, {
+                addMessageToConvo(convoResponse.convoId, convoResponse.message);
+                setSelectedConvo(convoResponse.convoId)
+                changeLastMessage(convoResponse.convoId, {
                     message: message,
                     messageCrypted: encryptedMessage,
                     messageRead: true,
                     messageSentAt: convoResponse.message.sentAt
                 })
+            }
+            if (convoResponse.success){
                 setMessage('')
             }
 
@@ -126,7 +131,7 @@ function ChatWindow() {
                     ))}
                 </div>
            
-                <div className={styles.footer}>
+                <div className={styles.footer} onClick={()=>console.log(convoMessages, conversations, selectedConvo)}>
                     <input type="text" className={styles.input} value={message} onChange={(e) => setMessage(e.target.value)}/>
                     <button className={`${styles.button} labelWithIcon`} onClick={sendMessage}>
                         <span className={`material-symbols-outlined`}>send</span>

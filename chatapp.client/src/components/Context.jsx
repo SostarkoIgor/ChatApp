@@ -40,12 +40,17 @@ export const Context = ({ children }) => {
                     newHubConnection.on('ReceiveMessage', async (convoId, message) => {
                         console.log(convoId, message)
                         message.message = await decryptMessage(privateKey, message.encryptedMessage);
-                        if (conversations.find(x => x.convoId == convoId) == undefined){
                             addConversation({
                                 convoId: convoId,
                                 otherConvoUsers: [
-                                    message.senderUsername,
-                                    message.receiverUsername
+                                    {
+                                        userName:message.senderUsername,
+                                        publicKey: null
+                                    },
+                                    {
+                                        userName:message.receiverUsername,
+                                        publicKey: null
+                                    }
                                 ],
                                 lastMessage: {
                                     message: message.message,
@@ -54,10 +59,7 @@ export const Context = ({ children }) => {
                                     messageSentAt: message.sentAt
                                 }
                             })
-                            addConvo(convoId, [message]);
-                        }
-                        if (convoMessages[convoId] !== undefined)
-                            addMessageToConvo(convoId, message);
+                        addMessageToConvo(convoId, message);
                         changeLastMessage(convoId, {
                             message: message.message,
                             messageCrypted: message.encryptedMessage,
@@ -95,7 +97,13 @@ export const Context = ({ children }) => {
     }
 
     const addConversation = (conversation_) => {
-        setConversations([...conversations, conversation_])
+        setConversations(oldConversations=>{
+            if (oldConversations.find(x => x.convoId === conversation_.convoId)) {
+                return oldConversations
+            }
+            let newConversations=oldConversations.filter(x => x.convoId !== conversation_.convoId)
+            return [...newConversations, conversation_]
+        })
     }
 
     const changeLastMessage = (convoId, newLastMessage) => {
@@ -116,15 +124,37 @@ export const Context = ({ children }) => {
     }
 
     const addMessageToConvo = (convoId, message) => {
-        console.log(convoMessages)
-        if (convoMessages[convoId] !== undefined)
-            setConvoMessages(convoMessages => ({ ...convoMessages, [convoId]: [...convoMessages[convoId], message] }))
-        else
-            setConvoMessages(convoMessages => ({ ...convoMessages, [convoId]: [message] }))
+        setConvoMessages(prevConvoMessages => {
+            console.log(prevConvoMessages); // Always logs the latest state
+    
+            // If the conversation doesn't exist, initialize it with the new message
+            if (!prevConvoMessages?.[convoId]) {
+                return { ...prevConvoMessages, [convoId]: [message] };
+            }
+            
+            // If the conversation exists, append the new message to the existing array
+            return { 
+                ...prevConvoMessages, 
+                [convoId]: [...prevConvoMessages[convoId], message] 
+            };
+        });
     }
 
     const addConvo = (convoId, conversation) => {
-        setConvoMessages(convoMessages => ({ ...convoMessages, [convoId]: conversation }))
+        setConvoMessages(convoMessages => { 
+            if (!convoMessages[convoId]) {
+                return { ...convoMessages, [convoId]: conversation }
+            }
+            else return convoMessages
+        })
+    }
+
+    const deleteConvoMessages = (convoId) => {
+        setConvoMessages(prevConvoMessages => {
+            const newConvoMessages = { ...prevConvoMessages }; // Copy the current convoMessages state
+            delete newConvoMessages[convoId]; // Remove the messages for the convoId
+            return newConvoMessages; // Update state
+        })
     }
 
 
@@ -152,7 +182,7 @@ export const Context = ({ children }) => {
         setUserKeys, addUserKey, conversations, setConversations, addConversation,
         selectedConvo, setSelectedConvo, reset, addPublicKeyIfNotPresent, username, setUsername,
         isLoaded, setIsLoaded, convoMessages, setConvoMessages, addMessageToConvo, addConvo, sendMessageToConvoSigR,
-        changeLastMessage }}>
+        changeLastMessage, deleteConvoMessages }}>
             {children}
         </AppContext.Provider>
     )
