@@ -26,9 +26,10 @@
 
 .userGroup{
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.8rem;
+    flex-direction: column;
+    align-items: left;
+    gap: 0.1rem;
+    margin-left: 1rem;
 }
 
 .username{
@@ -36,5 +37,38 @@
 }
 
 .selected{
-    outline: 2px solid var(--txt-color1);
+    opacity: 1;
+}
+
+.leftContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.lastMessage, .sentAt{
+    font-size: 0.8rem;
+    color: var(--txt-color2);
+    font-style: italic;
+}
+
+.sentAt{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-end;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.isRead, .isNotRead{
+    font-size: 1.1rem;
+    padding: 0.15rem;
+}
+
+.isNotRead{
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    color: var(--txt-dark-color2);
 }

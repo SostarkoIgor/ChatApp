@@ -41,7 +41,8 @@ const formatDate = (date) => {
     } 
     // If the date is neither today nor yesterday, return the full date
     else {
-        return dateString; // Return the formatted date (e.g., "9/19/2024")
+        //replaces / with .
+        return dateString.replace(/\//g, '.');; // Return the formatted date (e.g., "19.9.2024")
     }
 };
 
@@ -105,29 +106,39 @@ export default function ConvoList() {
                     if (conversation==null) return <></>
                     return (
                         <div className={`${userStyles.user} ${selectedConvo === conversation.convoId ? userStyles.selected : ''}`} key={index} onClick={()=>selectUserFromList(conversation.convoId)}>
-                            <div className={userStyles.userGroup}>
+                            <div className={userStyles.leftContainer}>
                                 <div className={userStyles.profilePic}>
                                     <img src="https://picsum.photos/200/300" alt="Placeholder Image" />
                                 </div>
-                                <div className={userStyles.username}>{displayName(conversation.otherConvoUsers)}</div>
-                            </div>
-                            <div className={userStyles.userGroup}>
-                                <div className={userStyles.lastMessage}>
-                                {conversation.lastMessage && conversation.lastMessage.message ?
-                                    <>
-                                    {conversation.lastMessage.message.length > 10 
-                                    ? conversation.lastMessage.message.substring(0, 7) + "..." 
-                                    : conversation.lastMessage.message}
-                                    </>
-                                    :<></>
-                                }
+                                <div className={`${userStyles.userGroup}`}>
+                                    <div className={userStyles.username}>{displayName(conversation.otherConvoUsers)}</div>
+                                    <div className={userStyles.lastMessage}>
+                                        {conversation.lastMessage && conversation.lastMessage.message ?
+                                            <>
+                                            {conversation.lastMessage.message.length > 10 
+                                            ? conversation.lastMessage.message.substring(0, 7) + "..." 
+                                            : conversation.lastMessage.message}
+                                            </>
+                                            :<></>
+                                        }
+                                    </div>
                                 </div>
+                                
                             </div>
-                            <div className={styles.sentAt}>
-                            {conversation.lastMessage && conversation.lastMessage.message ?
-                                <>{formatDate(conversation.lastMessage.messageSentAt)}</>
-                                :<></>
-                            }
+                            
+                            <div className={userStyles.sentAt}>
+                                <div>
+                                    {conversation.lastMessage && conversation.lastMessage.message ?
+                                        <>{formatDate(conversation.lastMessage.messageSentAt)}</>
+                                        :<></>
+                                    }
+                                </div>
+                                <div>
+                                    {conversation.lastMessage && conversation.lastMessage.isRead ?
+                                        <span className={`material-symbols-outlined ${userStyles.isRead}`}>check_circle</span>
+                                        :<span className={`material-symbols-outlined ${userStyles.isNotRead}`}>notifications</span>
+                                    }
+                                </div>
                             </div>
                         </div>
                     )

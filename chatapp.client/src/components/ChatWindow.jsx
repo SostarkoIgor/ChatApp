@@ -31,11 +31,11 @@ function formatDate(date) {
     // Check if the message date is in the same year
     else if (messageDate.getFullYear() === now.getFullYear()) {
         // If it's the same year, return month, day, and time (without the year)
-        return monthAndTimeWithoutYear;
+        return monthAndTimeWithoutYear.replace(/\//g, '.');
     } 
     else {
         // If it's a different year, return the full date
-        return dateString;
+        return dateString.replace(/\//g, '.');;
     }
 }
 
@@ -121,17 +121,24 @@ function ChatWindow() {
             <div className={styles.body}>
                 <div className={styles.messages} ref={chatRef}>
                     {convoMessages[selectedConvo]?.map((message, index) => (
-                        <div className={styles.messageContainer} key={index}>
-                            <div className={`${styles.message} ${message.senderUsername != username ? styles.messageFromOtherUser : styles.messageFromLoggedInUser}`}>
-                                <div className={styles.messageText}> {message.message} </div>
-                                <div className={styles.messageTime}>{formatDate(message.sentAt)}</div>
+                        <>
+                            
+                            <div className={styles.messageContainer} key={index}>
+                                {message.senderUsername != username &&
+                                <div className={styles.profilePic}>
+                                    <img src="https://picsum.photos/200/300" alt="Placeholder Image" />
+                                </div>}
+                                <div className={`${styles.message} ${message.senderUsername != username ? styles.messageFromOtherUser : styles.messageFromLoggedInUser}`}>
+                                    <div className={styles.messageText}> {message.message} </div>
+                                    <div className={styles.messageTime}>{formatDate(message.sentAt)}</div>
+                                </div>
+                                
                             </div>
-                        </div>
-                        
+                        </>
                     ))}
                 </div>
            
-                <div className={styles.footer} onClick={()=>console.log(convoMessages, conversations, selectedConvo)}>
+                <div className={styles.footer}>
                     <input type="text" className={styles.input} value={message} onChange={(e) => setMessage(e.target.value)}/>
                     <button className={`${styles.button} labelWithIcon`} onClick={sendMessage}>
                         <span className={`material-symbols-outlined`}>send</span>
