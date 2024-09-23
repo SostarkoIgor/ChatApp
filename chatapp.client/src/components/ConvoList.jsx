@@ -115,8 +115,8 @@ export default function ConvoList() {
                                     <div className={userStyles.lastMessage}>
                                         {conversation.lastMessage && conversation.lastMessage.message ?
                                             <>
-                                            {conversation.lastMessage.message.length > 10 
-                                            ? conversation.lastMessage.message.substring(0, 7) + "..." 
+                                            {conversation.lastMessage.message.length > 20 
+                                            ? conversation.lastMessage.message.substring(0, 17) + "..." 
                                             : conversation.lastMessage.message}
                                             </>
                                             :<></>

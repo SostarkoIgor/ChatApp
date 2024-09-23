@@ -124,13 +124,14 @@ function ChatWindow() {
                         <>
                             
                             <div className={styles.messageContainer} key={index}>
-                                {message.senderUsername != username &&
-                                <div className={styles.profilePic}>
-                                    <img src="https://picsum.photos/200/300" alt="Placeholder Image" />
-                                </div>}
+                                
                                 <div className={`${styles.message} ${message.senderUsername != username ? styles.messageFromOtherUser : styles.messageFromLoggedInUser}`}>
-                                    <div className={styles.messageText}> {message.message} </div>
-                                    <div className={styles.messageTime}>{formatDate(message.sentAt)}</div>
+                                    {message.senderUsername != username &&
+                                    <p className={styles.senderUsername}>{message.senderUsername}</p>}
+                                    <div className={`${styles.messageContent} ${message.senderUsername != username ? styles.messageFromOtherUser : styles.messageFromLoggedInUser}`}>
+                                        <div className={styles.messageText}> {message.message} </div>
+                                        <div className={styles.messageTime}>{formatDate(message.sentAt)}</div>
+                                    </div>
                                 </div>
                                 
                             </div>
