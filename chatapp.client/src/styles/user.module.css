@@ -5,7 +5,7 @@
     justify-content: space-between;
     gap: 0.5rem;
     padding: 1rem;
-    background-color: var(--bg-color2);
+    
     color: var(--txt-color1);
     border-radius: 0.5rem;
     margin: 1rem;
@@ -37,7 +37,7 @@
 }
 
 .selected{
-    opacity: 1;
+    background-color: var(--bg-color2);
 }
 
 .leftContainer{
@@ -71,4 +71,22 @@
     background-color: var(--primary-color);
     border-radius: 50%;
     color: var(--txt-dark-color2);
+}
+
+.startConvo, .blockUser{
+    font-size: 1.5rem;
+    transition: scale 0.3s;
+}
+
+.startConvo:hover, .blockUser:hover{
+    cursor: pointer;
+    scale: 1.1;
+}
+
+.startConvo:hover{
+    color: green;
+}
+
+.blockUser:hover{
+    color: red;
 }

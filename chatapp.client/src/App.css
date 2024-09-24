@@ -1,16 +1,19 @@
 ﻿body.dark{
     --bg-color1: #101010;
     --bg-color2: #2D2D2D;
+    --bg-color3: #2D2D2D;
 
     --txt-color1: #fff;
     --txt-color2: #cbcbcbd4;
+
 
     --gradient: linear-gradient(180deg, #1c4f76 0%, #0a705d 100%);
 }
 
 body.light{
     --bg-color1: #fff;
-    --bg-color2: #f5f5f5;
+    --bg-color2: #e2e2e2;
+    --bg-color3: #b671ff;
 
     --txt-color1: #000;
     --txt-color2: #2c2c2cec;

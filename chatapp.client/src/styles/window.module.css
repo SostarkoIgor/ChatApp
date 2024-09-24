@@ -25,8 +25,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background-color: var(--secondary-color);
-    color: var(--txt-dark-color2);
+    background-color: var(--bg-color3);
+    color: var(--txt-color2);
 }
 
 .close{

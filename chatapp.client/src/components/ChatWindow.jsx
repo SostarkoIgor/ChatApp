@@ -116,12 +116,16 @@ function ChatWindow() {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
+                <span className={`material-symbols-outlined ${styles.backArrow}`} onClick={() => setSelectedConvo(null)}>arrow_back</span>
+                <div className={styles.profilePic}>
+                    <img src="https://picsum.photos/200/300" alt="Placeholder Image" />
+                </div>
                 {conversations.find(x => x.convoId == selectedConvo)?.otherConvoUsers.filter(user => user.userName != username).map(user => user.userName)}
             </div>
             <div className={styles.body}>
                 <div className={styles.messages} ref={chatRef}>
                     {convoMessages[selectedConvo]?.map((message, index) => (
-                        <>
+                        
                             
                             <div className={styles.messageContainer} key={index}>
                                 
@@ -135,7 +139,7 @@ function ChatWindow() {
                                 </div>
                                 
                             </div>
-                        </>
+                        
                     ))}
                 </div>
            

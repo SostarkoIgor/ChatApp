@@ -102,7 +102,20 @@ export default function ConvoList() {
         <div className={styles.container}>
             {/* <div className={styles.title}>Conversations</div> */}
             <div className={styles.conversations}>
-                {conversations.map((conversation, index) => {
+                {conversations
+                .sort((a, b) => {
+                    
+                    if (!a.lastMessage && b.lastMessage) return -1;
+                    if (a.lastMessage && !b.lastMessage) return 1;
+
+                    
+                    if (a.lastMessage && b.lastMessage) {
+                        return new Date(b.lastMessage.messageSentAt) - new Date(a.lastMessage.messageSentAt);
+                    }
+
+                    return 0;
+                })
+                .map((conversation, index) => {
                     if (conversation==null) return <></>
                     return (
                         <div className={`${userStyles.user} ${selectedConvo === conversation.convoId ? userStyles.selected : ''}`} key={index} onClick={()=>selectUserFromList(conversation.convoId)}>

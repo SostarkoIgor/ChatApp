@@ -67,18 +67,20 @@ function SearchUsers({closeWindow}) {
                     {users.map((user) => {
                         return (
                             <div className={userStyles.user} key={user.username}>
-                                <div className={userStyles.userGroup}>
+                                <div></div>
+                                <div className={userStyles.leftContainer}>
                                     <div className={userStyles.profilePic}>
                                         <img src="https://picsum.photos/200/300" alt="Placeholder Image" />
                                     </div>
                                     <div className={userStyles.username}>{user.username}</div>
                                 </div>
-                                <div className={userStyles.userGroup}>
-                                    <span className={`material-symbols-outlined ${userStyles.action}`} onClick={() => startConversation(user.username)}>
+                                <div className={userStyles.leftContainer}>
+                                    <span className={`material-symbols-outlined ${userStyles.startConvo}`} title='Send message' onClick={() => startConversation(user.username)}>
                                         message
                                     </span>
-                                    <span className={`material-symbols-outlined ${userStyles.action}`}>block</span>
+                                    <span className={`material-symbols-outlined ${userStyles.blockUser}`} title='Block user'>block</span>
                                 </div>
+                                <div></div>
                             </div>
                         )
                     })}
