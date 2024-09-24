@@ -53,7 +53,8 @@ export default function ConvoList() {
         setSelectedConvo, addUserKey, addPublicKeyIfNotPresent, username, isLoaded, setIsLoaded,
         convoMessages, setConvoMessages, addMessageToConvo, addConvo, changeLastMessage  } = useContext(AppContext)
 
-    
+    const [filter, setFilter] = useState('')
+
     const displayName=(users)=>{
         return users.filter(user=>user.userName!==username).map(user=>user.userName).join(', ')
     }
@@ -100,7 +101,20 @@ export default function ConvoList() {
     if (!isLoaded) return null
     return (
         <div className={styles.container}>
-            {/* <div className={styles.title}>Conversations</div> */}
+            <div className={styles.header}>
+                <div className={styles.headerContainer}>
+                    <div className={styles.title}>Conversations</div>
+                    <div className={styles.icons}>
+                        <span className='material-symbols-outlined'>add_comment</span>
+                        <span className='material-symbols-outlined'>group_add</span>
+                    </div>
+                </div>
+                <div className={`${styles.headerContainer} ${styles.searchContainer}`}>
+                    <input type="text" placeholder="Search" className={styles.input} value={filter} onChange={(e) => setFilter(e.target.value)}/>
+                    {filter.length > 0 && <span className='material-symbols-outlined' onClick={() => setFilter('')} style={{cursor: 'pointer'}}>close</span>}
+                    {filter.length == 0 && <span className='material-symbols-outlined'>search</span>}
+                </div>
+            </div>
             <div className={styles.conversations}>
                 {conversations
                 .sort((a, b) => {
@@ -116,7 +130,7 @@ export default function ConvoList() {
                     return 0;
                 })
                 .map((conversation, index) => {
-                    if (conversation==null) return <></>
+                    if (conversation==null || conversation.otherConvoUsers==null || !displayName(conversation.otherConvoUsers).includes(filter)) return <></>
                     return (
                         <div className={`${userStyles.user} ${selectedConvo === conversation.convoId ? userStyles.selected : ''}`} key={index} onClick={()=>selectUserFromList(conversation.convoId)}>
                             <div className={userStyles.leftContainer}>

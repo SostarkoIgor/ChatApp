@@ -13,7 +13,7 @@
 body.light{
     --bg-color1: #fff;
     --bg-color2: #e2e2e2;
-    --bg-color3: #b671ff;
+    --bg-color3: #4f0fff;
 
     --txt-color1: #000;
     --txt-color2: #2c2c2cec;
@@ -31,6 +31,9 @@ body{
 
     --txt-dark-color1: #101010;
     --txt-dark-color2: #232323d4;
+
+    --txt-light-color1: #fff;
+    --txt-light-color2: #cbcbcbd4;
 
     min-height: 100vh;
 }

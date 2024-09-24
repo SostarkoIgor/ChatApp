@@ -8,3 +8,59 @@
     width: 30%;
     color: var(--txt-color1);
 }
+
+.header{
+    display: flex;
+    flex-direction: column;
+    align-items: normal;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    padding: 1rem;
+    margin: 0.5rem;
+}
+
+.conversations{
+    border-top: 2px solid var(--bg-color2);
+}
+
+.input{
+    flex:1;
+    border-radius: 1rem;
+    outline: none;
+    border: none;
+    background-color: var(--bg-color2);
+    color: var(--txt-color1);
+}
+
+
+
+.headerContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 0.5rem;
+    color: var(--txt-color1);
+    padding: 0.5rem;
+}
+
+.searchContainer{
+    padding: 0.5rem;
+    background-color: var(--bg-color2);
+    border-radius: 1rem;
+    font-size: 1rem;
+}
+
+.searchContainer span{
+    font-size: 1.1rem;
+    color: var(--txt-color2);
+}
+
+.icons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 0.5rem;
+    color: var(--txt-color1);
+}

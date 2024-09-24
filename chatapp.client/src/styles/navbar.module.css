@@ -4,7 +4,7 @@
     align-items: center;
     padding: 1rem;
     background-color: var(--bg-color3);
-    color: var(--txt-color1);
+    color: var(--txt-light-color1);
 }
 
 .centerNavBar{

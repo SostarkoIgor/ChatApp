@@ -26,7 +26,7 @@
     align-items: center;
     padding: 1rem;
     background-color: var(--bg-color3);
-    color: var(--txt-color2);
+    color: var(--txt-light-color1);
 }
 
 .close{
