@@ -1,4 +1,4 @@
-.container{
+.container, .emptyContainer{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -6,6 +6,24 @@
     min-width: 320px;
     width: 70%;
     color: var(--txt-color1);
+}
+
+.emptyContainer{
+    justify-content: flex-start;
+    text-align: center;
+    padding-top: 5rem;
+}
+
+.title{
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--txt-color2);
+    margin: 2rem;
+}
+
+.subtitle{
+    font-size: 1rem;
+    color: var(--txt-color2);
 }
 
 .header{
@@ -92,7 +110,7 @@
 
     justify-content: space-between;
     gap: 0.5rem;
-    max-width: 40%;
+    max-width: 80%;
     
 }
 
@@ -169,4 +187,19 @@
 
 .backArrow:hover{
     cursor: pointer;
+}
+@media screen and (max-width: 700px) {
+    .container{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 100%;
+    }
+    .hideWhenSmallScreen{
+        display: none;
+    }
+    .header{
+        margin: 0;
+    }
 }

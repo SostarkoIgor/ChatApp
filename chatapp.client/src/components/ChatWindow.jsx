@@ -111,7 +111,15 @@ function ChatWindow() {
     }
 
     if (selectedConvo === null) {
-        return (<div className={styles.container}></div>)
+        return (<div className={`${styles.emptyContainer} ${styles.hideWhenSmallScreen}`}>
+            <p className={styles.title}>Select a conversation</p>
+            <p className={styles.subtitle}>
+                To get started, select a conversation or start a new one
+                <br/>
+                by searching for users by username
+            </p>
+
+        </div>)
     }
     return (
         <div className={styles.container}>

@@ -23,6 +23,10 @@
     border-top: 2px solid var(--bg-color2);
 }
 
+.conversations div{
+    cursor: pointer;
+}
+
 .input{
     flex:1;
     border-radius: 1rem;
@@ -31,8 +35,6 @@
     background-color: var(--bg-color2);
     color: var(--txt-color1);
 }
-
-
 
 .headerContainer{
     display: flex;
@@ -63,4 +65,11 @@
     justify-content: space-evenly;
     gap: 0.5rem;
     color: var(--txt-color1);
+}
+
+@media screen and (max-width: 700px) {
+    .container{
+        width: 100%;
+        min-height: 100vh;
+    }
 }
