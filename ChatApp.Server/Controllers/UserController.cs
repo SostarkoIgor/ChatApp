@@ -41,5 +41,12 @@ namespace ChatApp.Server.Controllers
             if (userName == null) { return BadRequest(); }
             return Ok(await _userService.GetPublicKeyOfUserAsync(userName));
         }
+
+        [HttpGet("userInfo/{userName}")]
+        public async Task<ActionResult<UserInfoDto>> GetUserInfo([FromRoute] string? userName)
+        {
+            if (userName == null) { return BadRequest(); }
+            else return Ok(await _userService.GetUserInfoByUsernameAsync(userName));
+        }
     }
 }

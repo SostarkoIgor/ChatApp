@@ -61,6 +61,20 @@ namespace ChatApp.Server.Services
             };
         }
 
+        public async Task<UserInfoDto?> GetUserInfoByUsernameAsync(string userName)
+        {
+            return await _appDbContext.Users.Where(a=>a.UserName == userName).Select(
+                a=>new UserInfoDto()
+                {
+                    Description = a.Description,
+                    UserName = a.UserName,
+                    FirstName = a.FirstName,
+                    LastName = a.LastName,
+                    Email = a.Email
+                }
+                ).FirstOrDefaultAsync();
+        }
+
         public async Task<SearchUsersByUsernameResponseDto> GetUsersByUsernameAsync(string username)
         {
             var users = await _appDbContext.Users.Where(a =>a.UserName.Contains(username))

@@ -18,6 +18,8 @@ namespace ChatApp.Server.Interfaces
         public Task<string?> GetPublicKeyOfUserAsync(string userName);
 
         public Task<bool> ExistsUserWithUserNameAsync(string userName);
+
+        public Task<UserInfoDto?> GetUserInfoByUsernameAsync(string userName);
     }
 
 }

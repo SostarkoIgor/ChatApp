@@ -1,0 +1,35 @@
+.title{
+    text-align: center;
+    width: 100%;
+}
+
+.profilePicture{
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.left, .right{
+    width: 50%;
+    padding: 1rem;
+}
+
+.left{
+    text-align: right;  
+}
+
+.right{
+    text-align: left;
+}
+
+.bigGroup{
+    display: flex;
+    flex-direction: row;
+}
+
+.label, .value{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    line-break: anywhere;
+}

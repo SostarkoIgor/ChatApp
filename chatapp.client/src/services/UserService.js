@@ -21,3 +21,22 @@ export async function getUsersByUsername(userName) {
         }
     }
 }
+
+export async function getUserInfo(userName){
+    try{
+        let response = await axios.get(source + '/api/User/userInfo/'+userName, {
+            headers: {
+                Authorization: 'Bearer ' + getToken()
+            }
+        })
+        return {
+            success: true,
+            userInfo: response.data
+        }
+    }
+    catch(error){
+        return {
+            success: false
+        }
+    }
+}

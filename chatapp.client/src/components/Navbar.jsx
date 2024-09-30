@@ -5,15 +5,18 @@ import { useNavigate } from 'react-router-dom'
 import { AppContext } from '../components/Context'
 import { useContext, useState } from 'react'
 import SearchUsers from './SearchUsers'
+import ProfileModal from './ProfileModal'
 
 function Navbar() {
     const navigate = useNavigate()
     const appContext = useContext(AppContext)
 
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
     return (<>
-    {isModalOpen && <SearchUsers closeWindow={() => setIsModalOpen(false)} />}
+    {isSearchModalOpen && <SearchUsers closeWindow={() => setIsSearchModalOpen(false)} />}
+    {isProfileModalOpen && <ProfileModal closeWindow={() => setIsProfileModalOpen(false)} userName={appContext.username} /> }
     <div className={styles.navbar}>
         <div className={`${styles.logo} labelWithIcon`}>
             <span className="material-symbols-outlined">chat</span>
@@ -24,11 +27,11 @@ function Navbar() {
                 <span className="material-symbols-outlined">home</span>
                 <span className={styles.navBarLabel}>Home</span>
             </div>
-            <div className={`${styles.navItem} labelWithIcon`} onClick={() => setIsModalOpen(true)}>
+            <div className={`${styles.navItem} labelWithIcon`} onClick={() => setIsSearchModalOpen(true)}>
                 <span className="material-symbols-outlined">search</span>
                 <span className={styles.navBarLabel}>Search</span>
             </div>
-            <div className={`${styles.navItem} labelWithIcon`}>
+            <div className={`${styles.navItem} labelWithIcon`} onClick={() => setIsProfileModalOpen(true)}>
                 <span className="material-symbols-outlined">account_circle</span>
                 <span className={styles.navBarLabel}>Profile</span>
             </div>
