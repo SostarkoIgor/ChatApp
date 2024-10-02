@@ -33,3 +33,51 @@
     margin-bottom: 1rem;
     line-break: anywhere;
 }
+
+.icon{
+    display: flex;
+    flex-direction: row;
+    gap: 0.2rem;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 0.5rem;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+}
+
+.icon .label{
+    margin: 0;
+    padding: 0;
+}
+
+.block{
+    outline: 1px solid red;
+    color: red;
+    font-weight: bold;
+    width:fit-content;
+
+    transition: all 0.3s ease;
+}
+
+.block:hover{
+    cursor: pointer;
+    background-color: red;
+    color: white;
+}
+
+.edit{
+    outline: 1px solid green;
+    color: green;
+    font-weight: bold;
+    width:fit-content;
+
+    transition: all 0.3s ease;
+}
+
+.edit:hover{
+    cursor: pointer;
+    background-color: green;
+    color: white;
+}

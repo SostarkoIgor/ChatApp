@@ -11,12 +11,9 @@ function Navbar() {
     const navigate = useNavigate()
     const appContext = useContext(AppContext)
 
-    const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
-    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
-
     return (<>
-    {isSearchModalOpen && <SearchUsers closeWindow={() => setIsSearchModalOpen(false)} />}
-    {isProfileModalOpen && <ProfileModal closeWindow={() => setIsProfileModalOpen(false)} userName={appContext.username} /> }
+    {appContext.isSearchModalOpen && <SearchUsers closeWindow={() => appContext.setIsSearchModalOpen(false)} />}
+    {appContext.isProfileModalOpen && <ProfileModal closeWindow={() => appContext.setIsProfileModalOpen(false)} userName={appContext.modalProfileUsername} isLoggedInUser={appContext.modalProfileIsLoggedInUser} /> }
     <div className={styles.navbar}>
         <div className={`${styles.logo} labelWithIcon`}>
             <span className="material-symbols-outlined">chat</span>
@@ -27,11 +24,11 @@ function Navbar() {
                 <span className="material-symbols-outlined">home</span>
                 <span className={styles.navBarLabel}>Home</span>
             </div>
-            <div className={`${styles.navItem} labelWithIcon`} onClick={() => setIsSearchModalOpen(true)}>
+            <div className={`${styles.navItem} labelWithIcon`} onClick={() => appContext.setIsSearchModalOpen(true)}>
                 <span className="material-symbols-outlined">search</span>
                 <span className={styles.navBarLabel}>Search</span>
             </div>
-            <div className={`${styles.navItem} labelWithIcon`} onClick={() => setIsProfileModalOpen(true)}>
+            <div className={`${styles.navItem} labelWithIcon`} onClick={() => {appContext.setIsProfileModalOpen(true); appContext.setModalProfileUsername(appContext.username); appContext.setModalProfileIsLoggedInUser(true);}}>
                 <span className="material-symbols-outlined">account_circle</span>
                 <span className={styles.navBarLabel}>Profile</span>
             </div>

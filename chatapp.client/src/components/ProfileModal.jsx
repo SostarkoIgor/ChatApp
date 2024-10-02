@@ -3,7 +3,7 @@ import styles from '../styles/userInfo.module.css'
 import { useEffect, useState } from 'react'
 import { getUserInfo } from '../services/UserService'
 
-function ProfileModal({closeWindow, userName}) {
+function ProfileModal({closeWindow, userName, isLoggedInUser}) {
     const [user, setUser] = useState({})
     useEffect(() => {
         function start() {
@@ -44,6 +44,14 @@ function ProfileModal({closeWindow, userName}) {
                         <p className={styles.value}>{user.description}</p>
                     </div>
                 </div>
+                {!isLoggedInUser && <div className={`${styles.icon} ${styles.block}`}>
+                    <p className={styles.label}>Block user</p>
+                    <span className={`material-symbols-outlined`} onClick={closeWindow}>block</span>
+                </div>}
+                {isLoggedInUser && <div className={`${styles.icon} ${styles.edit}`}>
+                    <p className={styles.label}>Edit your profile</p>
+                    <span className={`material-symbols-outlined`} onClick={closeWindow}>edit</span>
+                </div>}
             </div>
         </div>
     )

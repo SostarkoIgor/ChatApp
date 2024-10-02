@@ -23,6 +23,12 @@ export const Context = ({ children }) => {
 
     const [hubConnection, setHubConnection] = useState(null)
 
+    const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+
+    const [modalProfileUsername, setModalProfileUsername] = useState(null)
+    const [modalProfileIsLoggedInUser, setModalProfileIsLoggedInUser] = useState(false)
+
     useEffect(() => {  
         async function start() {  
             if (isLoaded) {
@@ -182,7 +188,8 @@ export const Context = ({ children }) => {
         setUserKeys, addUserKey, conversations, setConversations, addConversation,
         selectedConvo, setSelectedConvo, reset, addPublicKeyIfNotPresent, username, setUsername,
         isLoaded, setIsLoaded, convoMessages, setConvoMessages, addMessageToConvo, addConvo, sendMessageToConvoSigR,
-        changeLastMessage, deleteConvoMessages }}>
+        changeLastMessage, deleteConvoMessages, isSearchModalOpen, setIsSearchModalOpen, isProfileModalOpen, setIsProfileModalOpen,
+        modalProfileUsername, setModalProfileUsername, modalProfileIsLoggedInUser, setModalProfileIsLoggedInUser }}>
             {children}
         </AppContext.Provider>
     )

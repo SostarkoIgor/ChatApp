@@ -45,7 +45,7 @@ function ChatWindow() {
     const { privateKey, userKeys, setPrivateKey, conversations, 
         setConversations, selectedConvo, setSelectedConvo, addUserKey,
         username, convoMessages, setConvoMessages, addMessageToConvo, addConvo, sendMessageToConvoSigR,
-        changeLastMessage
+        changeLastMessage, isProfileModalOpen, setIsProfileModalOpen, setModalProfileUsername, setModalProfileIsLoggedInUser
     } = useContext(AppContext)
 
     const [message, setMessage] = useState('')
@@ -128,7 +128,9 @@ function ChatWindow() {
                 <div className={styles.profilePic}>
                     <img src="https://picsum.photos/200/300" alt="Placeholder Image" />
                 </div>
-                {conversations.find(x => x.convoId == selectedConvo)?.otherConvoUsers.filter(user => user.userName != username).map(user => user.userName)}
+                <div className={styles.username} onClick={() => {setModalProfileUsername(conversations.find(x => x.convoId == selectedConvo)?.otherConvoUsers.filter(user => user.userName != username)[0].userName); setModalProfileIsLoggedInUser(false); setIsProfileModalOpen(true); }}>                    
+                    {conversations.find(x => x.convoId == selectedConvo)?.otherConvoUsers.filter(user => user.userName != username).map(user => user.userName)}
+                </div>
             </div>
             <div className={styles.body}>
                 <div className={styles.messages} ref={chatRef}>
