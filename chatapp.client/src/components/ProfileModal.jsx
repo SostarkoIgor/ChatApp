@@ -1,20 +1,34 @@
 import windowStyles from '../styles/window.module.css'
 import styles from '../styles/userInfo.module.css'
 import { useEffect, useState } from 'react'
-import { getUserInfo } from '../services/UserService'
+import { getUserInfo, blockUser } from '../services/UserService'
 
 function ProfileModal({closeWindow, userName, isLoggedInUser}) {
     const [user, setUser] = useState({})
+    const [message, setMessage] = useState('')
     useEffect(() => {
         function start() {
             getUserInfo(userName).then((response) => {
                 if (response.success) {
                     setUser(response.userInfo)
+                    setMessage('')
                 }
             })
         }
         start()
     }, [userName])
+
+    function block() {
+        blockUser(userName).then((response) => {
+            if (response.success) {
+                closeWindow()
+            }
+            else {
+                setMessage("Error blocking user.")
+            }
+        })
+    }
+
     if (user)
         return (
         <div className={windowStyles.window}>
@@ -44,9 +58,10 @@ function ProfileModal({closeWindow, userName, isLoggedInUser}) {
                         <p className={styles.value}>{user.description}</p>
                     </div>
                 </div>
-                {!isLoggedInUser && <div className={`${styles.icon} ${styles.block}`}>
+                {!isLoggedInUser && <div className={`${styles.icon} ${styles.block}`} onClick={block}>
                     <p className={styles.label}>Block user</p>
-                    <span className={`material-symbols-outlined`} onClick={closeWindow}>block</span>
+                    <span className={`material-symbols-outlined`}>block</span>
+                    {message.length>0 && <p className={styles.message}>{message}</p>}
                 </div>}
                 {isLoggedInUser && <div className={`${styles.icon} ${styles.edit}`}>
                     <p className={styles.label}>Edit your profile</p>

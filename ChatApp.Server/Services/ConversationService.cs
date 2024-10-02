@@ -107,6 +107,11 @@ namespace ChatApp.Server.Services
 
             foreach (var a in conversations)
             {
+                if (await _appDbContext.Blocks.AnyAsync(
+                    (block=>a.Users.Contains(block.BlockedChatUser) && block.ChatUser.Equals(user))
+                    )){
+                        continue;
+                    }
                 var lastMessage = await _messageService.GetLastConvoMessage(a.Id, user);
                 var users = a.Users.Select(u => new GetUserConvosDto.ConvoUser
                 {

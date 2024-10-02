@@ -107,6 +107,7 @@ export default function ConvoList() {
                     <div className={styles.icons}>
                         <span className='material-symbols-outlined'>add_comment</span>
                         <span className='material-symbols-outlined'>group_add</span>
+                        <span className='material-symbols-outlined'>block</span>
                     </div>
                 </div>
                 <div className={`${styles.headerContainer} ${styles.searchContainer}`}>

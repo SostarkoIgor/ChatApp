@@ -56,15 +56,25 @@ namespace ChatApp.Server.Controllers
         }
 
         [HttpPost("blockUser")]
-        public async Task<ActionResult<bool>> BlockUserByUsername([FromBody] string? username)
+        public async Task<ActionResult<bool>> BlockUserByUsername([FromBody] BlockUserDto block)
         {
-            if (string.IsNullOrEmpty(username)) { return BadRequest(); }
-            var userToBlock=await _userService.GetUserByUsernameAsync(username);
+            if (string.IsNullOrEmpty(block.UserName)) { return BadRequest(); }
+            var userToBlock=await _userService.GetUserByUsernameAsync(block.UserName);
             if (userToBlock == null) return BadRequest();
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return BadRequest();
             return Ok(await _blockService.BlockUser(user, userToBlock));
 
+        }
+
+        [HttpGet("getBlockedUsers")]
+        public async Task<ActionResult<BlockedUsersListDto>> GetBlockedUsers()
+        {
+            var rez = await _blockService.GetBlockedUsersAsync(await _userManager.GetUserAsync(User));
+            return Ok(new BlockedUsersListDto()
+            {
+                BlockedUsers = rez
+            });
         }
     }
 }

@@ -40,3 +40,25 @@ export async function getUserInfo(userName){
         }
     }
 }
+
+export async function blockUser(userName){
+    try{
+        let response = await axios.post(source + '/api/User/blockUser',
+            {
+                UserName: userName
+            },
+            {
+            headers: {
+                Authorization: 'Bearer ' + getToken()
+            }
+        })
+        return {
+            success: true
+        }
+    }
+    catch(error){
+        return {
+            success: false
+        }
+    }
+}
