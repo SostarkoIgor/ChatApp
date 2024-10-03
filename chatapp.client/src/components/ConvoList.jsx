@@ -4,6 +4,7 @@ import { useContext, useState, useEffect } from 'react'
 import { AppContext } from '../components/Context'
 import { getConversations, getConvoMessages } from '../services/ConvoService'
 import { decryptMessage } from '../services/AuthAndKeyService'
+import { getBlockedUsers, unblockUser } from '../services/UserService'
 
 const formatDate = (date) => {
     const messageDate = new Date(date); // Convert input to a Date object (local time)
@@ -51,9 +52,12 @@ export default function ConvoList() {
 
     const { privateKey, userKeys, setPrivateKey, conversations, setConversations, selectedConvo,
         setSelectedConvo, addUserKey, addPublicKeyIfNotPresent, username, isLoaded, setIsLoaded,
-        convoMessages, setConvoMessages, addMessageToConvo, addConvo, changeLastMessage  } = useContext(AppContext)
+        convoMessages, setConvoMessages, addMessageToConvo, addConvo, changeLastMessage,
+        blockedUsers, setBlockedUsers} = useContext(AppContext)
 
     const [filter, setFilter] = useState('')
+
+    const [showBlockedUsers, setShowBlockedUsers] = useState(false)
 
     const displayName=(users)=>{
         return users.filter(user=>user.userName!==username).map(user=>user.userName).join(', ')
@@ -81,7 +85,14 @@ export default function ConvoList() {
             start()
     }, [])
 
-
+    const loadBlockedUsersIfNotLoaded = async () => {
+        if (blockedUsers==null) {
+            const response = await getBlockedUsers()
+            if (response.success) {
+                setBlockedUsers(response.blockedUsers)
+            }
+        }
+    }
     const selectUserFromList = async (convoId) => {
         setSelectedConvo(convoId)
         if (convoMessages[convoId] == undefined){  
@@ -103,11 +114,11 @@ export default function ConvoList() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.headerContainer}>
-                    <div className={styles.title}>Conversations</div>
+                    <div className={styles.title}>{showBlockedUsers ? 'Blocked Users' : 'Conversations'}</div>
                     <div className={styles.icons}>
-                        <span className='material-symbols-outlined'>add_comment</span>
-                        <span className='material-symbols-outlined'>group_add</span>
-                        <span className='material-symbols-outlined'>block</span>
+                        <span className={`material-symbols-outlined ${styles.icon} ${!showBlockedUsers ? '': styles.hidden}`}>add_comment</span>
+                        <span className={`material-symbols-outlined ${styles.icon} ${!showBlockedUsers ? '': styles.hidden}`}>group_add</span>
+                        <span className={`material-symbols-outlined ${styles.icon}`} onClick={() => { loadBlockedUsersIfNotLoaded(); setShowBlockedUsers(!showBlockedUsers);}}>block</span>
                     </div>
                 </div>
                 <div className={`${styles.headerContainer} ${styles.searchContainer}`}>
@@ -117,7 +128,7 @@ export default function ConvoList() {
                 </div>
             </div>
             <div className={styles.conversations}>
-                {conversations
+                {!showBlockedUsers && conversations
                 .sort((a, b) => {
                     
                     if (!a.lastMessage && b.lastMessage) return -1;
@@ -172,6 +183,23 @@ export default function ConvoList() {
                     )
                 })
                 }
+
+                {showBlockedUsers && blockedUsers && blockedUsers.map((user, index) => {
+                    if (!filter || filter.length == 0 || user.includes(filter))
+                    return (
+                        <div className={`${userStyles.unblockUser}`} key={index}>
+                            <div className={userStyles.leftContainer}>
+                                <div className={`${userStyles.userGroup}`}>
+                                    <div className={userStyles.username}>{user}</div>
+                                </div>
+                            </div>
+                            <div className={userStyles.unblockContainer}  onClick={() => unblockUser(user)}>
+                                <p>Unblock user</p>
+                                <span className={`material-symbols-outlined ${userStyles.icon}`} placeholder="unblock">block</span>
+                            </div>
+                        </div>
+                    )
+                })}
             </div>
         </div>
     )

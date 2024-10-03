@@ -62,3 +62,44 @@ export async function blockUser(userName){
         }
     }
 }
+
+export async function unblockUser(userName){
+    try{
+        let response = await axios.post(source + '/api/User/unblockUser',
+            {
+                UserName: userName
+            },
+            {
+            headers: {
+                Authorization: 'Bearer ' + getToken()
+            }
+        })
+        return {
+            success: true
+        }
+    }
+    catch(error){
+        return {
+            success: false
+        }
+    }
+}
+
+export async function getBlockedUsers(){
+    try{
+        let response = await axios.get(source + '/api/User/getBlockedUsers', {
+            headers: {
+                Authorization: 'Bearer ' + getToken()
+            }
+        })
+        return {
+            success: true,
+            blockedUsers: response.data.blockedUsers
+        }
+    }
+    catch(error){
+        return {
+            success: false
+        }
+    }
+}

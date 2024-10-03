@@ -32,5 +32,19 @@ namespace ChatApp.Server.Services
             var rez = await _context.Blocks.Where(a => a.ChatUser.Equals(user)).Select(a => a.BlockedChatUser.UserName).ToListAsync();
             return rez;
         }
+
+        public async Task<bool> UnblockUser(ChatUser user, ChatUser userToBlock)
+        {
+            try{
+                var block=await _context.Blocks.Where(a=>a.ChatUser.Equals(user)).FirstOrDefaultAsync();
+                if (block != null) {
+                    _context.Blocks.Remove(block);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch { return false; }
+        }
     }
 }

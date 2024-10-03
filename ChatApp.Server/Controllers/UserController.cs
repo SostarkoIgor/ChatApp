@@ -11,7 +11,7 @@ namespace ChatApp.Server.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UserController:ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly IBlockService _blockService;
@@ -37,7 +37,7 @@ namespace ChatApp.Server.Controllers
         public async Task<ActionResult<UserDataDto>> GetUserData([FromRoute] string? userName)
         {
             if (userName == null) { return NotFound(); }
-            UserDataDto userData= await _userService.GetUserDataAsync(userName);
+            UserDataDto userData = await _userService.GetUserDataAsync(userName);
             if (userName == null) return NotFound();
             return Ok(userData);
         }
@@ -59,11 +59,23 @@ namespace ChatApp.Server.Controllers
         public async Task<ActionResult<bool>> BlockUserByUsername([FromBody] BlockUserDto block)
         {
             if (string.IsNullOrEmpty(block.UserName)) { return BadRequest(); }
-            var userToBlock=await _userService.GetUserByUsernameAsync(block.UserName);
+            var userToBlock = await _userService.GetUserByUsernameAsync(block.UserName);
             if (userToBlock == null) return BadRequest();
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return BadRequest();
             return Ok(await _blockService.BlockUser(user, userToBlock));
+
+        }
+
+        [HttpPost("unblockUser")]
+        public async Task<ActionResult<bool>> UnblockUserByUsername([FromBody] BlockUserDto block)
+        {
+            if (string.IsNullOrEmpty(block.UserName)) return BadRequest();
+            var userToBlock = await _userService.GetUserByUsernameAsync(block.UserName);
+            if (userToBlock == null) return BadRequest();
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return BadRequest();
+            return Ok(await _blockService.UnblockUser(user, userToBlock));
 
         }
 
