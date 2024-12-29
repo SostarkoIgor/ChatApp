@@ -1,8 +1,8 @@
 # Chat app
 
-This is a small chat app project where i familirized myself with end-to-end encriptyon and realtime applictions.
+This is a small chat app project where I explored end-to-end encryption and real-time applications.
 
-This is still work in progress, unfinished for now.
+The project is still a work in progress and currently unfinished.
 
 ---
 
